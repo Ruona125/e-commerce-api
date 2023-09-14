@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt")
 const { User } = require("../../models/userModels");
 
+//user registration
 async function registerUser(req, res) {
   try {
     const { username, email, password } = req.body;
@@ -28,6 +29,7 @@ async function registerUser(req, res) {
   }
 }
 
+//view all the users
 async function viewUsers(req, res) {
   try {
     const users = await User.find({});
@@ -37,6 +39,7 @@ async function viewUsers(req, res) {
   }
 }
 
+//view certain user
 async function viewCertainUsers(req, res) {
   try {
     const { id } = req.params;
@@ -48,6 +51,7 @@ async function viewCertainUsers(req, res) {
   }
 }
 
+//delete user
 async function deleteCertainUser(req, res) {
   try {
     const { id } = req.params;
@@ -62,6 +66,7 @@ async function deleteCertainUser(req, res) {
   }
 }
 
+//user login
 async function login(req, res) {
   try {
     const { email, password } = req.body;
