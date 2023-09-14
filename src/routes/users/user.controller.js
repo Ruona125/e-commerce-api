@@ -80,16 +80,19 @@ async function login(req, res) {
     }
 
     // Check if the provided password matches the stored password
-    if (user.password !== password) {
-      return res.status(401).json({ message: "Incorrect password" });
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "invalid Login details" });
     }
 
     // Generate a JWT token containing the user's ID
-    const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+    const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-secret-key", {
       expiresIn: "1h", // Token expiration time (adjust as needed)
     });
-    const decode = jwt.decode(token)
-    console.log(decode.userId)
+    
+    //this is to check what's stored in the token
+    // const decode = jwt.decode(token)
+    // console.log(decode.isAdmin) 
 
     // Return the token to the client
     res.status(200).json({ message: "Login successful", token });
