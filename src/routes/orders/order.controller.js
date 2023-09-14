@@ -19,6 +19,16 @@ async function viewOrders(req, res) {
   }
 }
 
+async function viewCertainOrder(req, res) {
+  try {
+    const { id } = req.params;
+    const certainOrder = await Order.findById(id);
+    res.status(200).json(certainOrder);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function modifyOrder(req, res) {
   try {
     const { id } = req.params;
@@ -53,4 +63,5 @@ module.exports = {
   viewOrders,
   modifyOrder,
   deleteOrder,
+  viewCertainOrder
 };
