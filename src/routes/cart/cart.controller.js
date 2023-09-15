@@ -21,13 +21,19 @@ async function viewCart(req, res) {
 
 async function viewCertainCart(req, res) {
   try {
-    const { id } = req.params;
-    const certainCart = await Cart.findById(id);
-    res.status(200).json(certainCart);
+    const { userId } = req.params;
+    const certainCart = await Cart.findOne({ userId }); // Provide a query object here
+    if (certainCart) {
+      res.status(200).json(certainCart);
+    } else {
+      res.status(404).json({ message: 'Cart not found' }); // Handle the case when the cart is not found
+    }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: 'Internal server error' }); // Handle other errors
   }
 }
+
 
 async function deleteCart(req, res) {
   try {
