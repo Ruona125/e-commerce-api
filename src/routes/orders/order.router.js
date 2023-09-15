@@ -1,14 +1,14 @@
 const express = require("express")
 const {createOrder, viewOrders, modifyOrder, deleteOrder, viewCertainOrder} = require("./order.controller")
-const {adminAuth, authorize} = require("../../utils/requireAuth")
+const {isAdmin, authorize} = require("../../utils/requireAuth")
 
 const orderRouter = express.Router();
 
-orderRouter.post("/order", adminAuth, createOrder)
-orderRouter.get("/order", authorize, adminAuth, viewOrders)
-orderRouter.get("/order/:id",adminAuth, viewCertainOrder)
-orderRouter.put("/order/:id", adminAuth, modifyOrder)
-orderRouter.delete("/order/:id", adminAuth, deleteOrder)
+orderRouter.post("/order", isAdmin, createOrder)
+orderRouter.get("/order", authorize, isAdmin, viewOrders)
+orderRouter.get("/order/:id",isAdmin, viewCertainOrder)
+orderRouter.put("/order/:id", isAdmin, modifyOrder)
+orderRouter.delete("/order/:id", isAdmin, deleteOrder)
 
 
 module.exports = {

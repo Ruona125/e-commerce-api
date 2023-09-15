@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function adminAuth(req, res, next) {
+function isAdmin(req, res, next) {
   const token = req.headers["authorization"];
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
@@ -20,7 +20,7 @@ function adminAuth(req, res, next) {
     return res.status(401).json({ message: "Invalid token" });
   }
 }
-
+ 
 
 
 function authorize(req, res, next) {
@@ -88,7 +88,7 @@ function verifyPostCertainToken(req, res, next) {
 }
 
 module.exports = {
-  adminAuth,
+  isAdmin,
   authorize,
   verifyCertainToken,
   verifyPostCertainToken,
