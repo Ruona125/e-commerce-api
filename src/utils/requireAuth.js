@@ -1,31 +1,95 @@
 const jwt = require("jsonwebtoken");
 
-function verifyToken(req, res, next) {
+function adminAuth(req, res, next) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, "your-secret-key");
+    req.isAdmin = decoded.isAdmin;
+    // console.log(decoded.isAdmin)
+
+    if (!decoded.isAdmin) {
+      return res.status(401).json("Unauthorized");
+    }
+
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+}
+
+
+
+function authorize(req, res, next) {
   // Get the token from the request headers or query parameters
   const token = req.headers.authorization || req.query.token;
 
   if (!token) {
-    return res.status(401).json({ message: "Token is missing" });
+    return res.status(401).json({ message: 'Token is missing' });
   }
 
   try {
     // Verify and decode the token
-    const decoded = jwt.verify(token, "your_secret_key");
+    const decoded = jwt.verify(token, 'your-secret-key');
 
     // Check if the token has expired
     if (decoded.exp <= Date.now() / 1000) {
-      return res.status(401).json({ message: "Token has expired" });
+      return res.status(401).json({ message: 'Token has expired' });
     }
 
     // Token is valid, proceed to the next middleware
     next();
   } catch (error) {
     // Token verification failed
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired" });
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired' });
     }
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+}
+
+function verifyCertainToken(req, res, next) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, "your-secret-key");
+    req.userId = decoded.userId;
+    if (decoded.userId !== req.params.user_id) {
+      return res.status(401).json("unauthorize");
+    }
+    next();
+  } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
   }
 }
 
-module.exports = { verifyToken };
+function verifyPostCertainToken(req, res, next) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, "your-secret-key");
+    req.userId = decoded.userId;
+    if (decoded.userId !== req.body.user_id) {
+      return res.status(401).json("unauthorize");
+    }
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+}
+
+module.exports = {
+  adminAuth,
+  authorize,
+  verifyCertainToken,
+  verifyPostCertainToken,
+};
