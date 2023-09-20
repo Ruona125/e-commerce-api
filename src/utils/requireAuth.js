@@ -60,7 +60,8 @@ function verifyCertainToken(req, res, next) {
   try {
     const decoded = jwt.verify(token, "your-secret-key");
     req.userId = decoded.userId;
-    if (decoded.userId !== req.params.user_id) {
+    console.log(decoded.userId)
+    if (decoded.userId !== req.params.userId) {
       return res.status(401).json("unauthorize");
     }
     next();
@@ -78,7 +79,7 @@ function verifyPostCertainToken(req, res, next) {
   try {
     const decoded = jwt.verify(token, "your-secret-key");
     req.userId = decoded.userId;
-    if (decoded.userId !== req.body.user_id) {
+    if (decoded.userId !== req.body.userId) {
       return res.status(401).json("unauthorize");
     }
     next();
