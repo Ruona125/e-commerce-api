@@ -49,9 +49,27 @@ async function deleteCart(req, res) {
   }
 }
 
+async function modifyCart(req, res) {
+  try {
+    const { id } = req.params;
+    const updatedCart = await Cart.findByIdAndUpdate(id, req.body, { new: true });
+    
+    if (!updatedCart) {
+      return res.status(404).json("Can't find cart");
+    }
+
+    return res.status(200).json(updatedCart);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
 module.exports = {
   createCart,
   viewCart,
   viewCertainCart,
-  deleteCart
+  deleteCart,
+  modifyCart
 };

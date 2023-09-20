@@ -21,9 +21,13 @@ async function viewOrders(req, res) {
 
 async function viewCertainOrder(req, res) {
   try {
-    const { id } = req.params;
-    const certainOrder = await Order.findById(id);
-    res.status(200).json(certainOrder);
+    const { userId } = req.params;
+    const certainOrder = await Order.findOne({userId});
+    if(certainOrder){
+      res.status(200).json(certainOrder)
+    }else {
+      res.status(404).json({message: "Order not found"})
+    }
   } catch (error) {
     console.log(error);
   }
