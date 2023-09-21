@@ -41,7 +41,7 @@ async function deleteCertainProduct(req, res) {
     if (!product) {
       return res.status(404).json("can't find product with this particular id");
     }
-    return res.status(200).json(product);
+    return res.status(200).json("order deleted");
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });

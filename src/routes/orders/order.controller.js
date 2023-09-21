@@ -19,28 +19,41 @@ async function viewOrders(req, res) {
   }
 }
 
-async function viewCertainOrder(req, res) {
+async function viewCertainUserOrder(req, res) {
   try {
     const { userId } = req.params;
-    const certainOrder = await Order.findOne({userId});
-    if(certainOrder){
-      res.status(200).json(certainOrder)
-    }else {
-      res.status(404).json({message: "Order not found"})
+    const certainOrder = await Order.findOne({ userId });
+
+    if (certainOrder) {
+      return res.status(200).json(certainOrder);
+    } else {
+      return res.status(404).json({ message: "Order not found" });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
+
+
+async function viewCertainOrder(req, res) {
+  try {
+    const { id } = req.params;
+    const certainOrder = await Order.findById(id);
+    res.status(200).json(certainOrder)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message: error.message})
+  }
+}
 async function modifyOrder(req, res) {
   try {
     const { id } = req.params;
-    const order = await Order.findByIdAndUpdate(id, req.body);
-    if (!order) {
+    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {new: true});
+    if (!updatedOrder) {
       return res.status(404).json("can't find order with this id");
     }
-    const updatedOrder = await Order.findById(id);
     return res.status(200).json(updatedOrder);
   } catch (error) {
     console.log(error.message);
@@ -55,7 +68,7 @@ async function deleteOrder(req, res) {
     if (!order) {
       return res.status(404).json("can't find product with this particular id");
     }
-    return res.status(200).json(order);
+    return res.status(200).json("order deleted");
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
@@ -67,5 +80,6 @@ module.exports = {
   viewOrders,
   modifyOrder,
   deleteOrder,
+  viewCertainUserOrder,
   viewCertainOrder
 };

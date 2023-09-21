@@ -19,7 +19,7 @@ async function viewCart(req, res) {
   }
 }
 
-async function viewCertainCart(req, res) {
+async function viewCertainUserCart(req, res) {
   try {
     const { userId } = req.params;
     const certainCart = await Cart.findOne({ userId }); // Provide a query object here
@@ -42,7 +42,7 @@ async function deleteCart(req, res) {
     if (!deleteCart) {
       return res.status(404).json("cart not found");
     }
-    return res.status(200).json(deleteCart);
+    return res.status(200).json("cart deleted");
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
@@ -63,13 +63,13 @@ async function modifyCart(req, res) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
-}
+} 
 
 
 module.exports = {
   createCart,
   viewCart,
-  viewCertainCart,
+  viewCertainUserCart,
   deleteCart,
   modifyCart
 };
