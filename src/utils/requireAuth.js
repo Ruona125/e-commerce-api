@@ -60,7 +60,7 @@ function verifyCertainToken(req, res, next) {
   try {
     const decoded = jwt.verify(token, "your-secret-key");
     req.userId = decoded.userId;
-    console.log(decoded.userId)
+    // console.log(decoded.userId)
     if (decoded.userId !== req.params.userId) {
       return res.status(401).json("unauthorize");
     }
