@@ -14,9 +14,12 @@ const {
   verifyPostCertainToken,
 } = require("../../utils/requireAuth");
 
+const {validation} = require("../../utils/validationMiddleware")
+const {createOrderSchema} = require("../../validations/orderValidation")
+
 const orderRouter = express.Router();
 
-orderRouter.post("/order", authorize, verifyPostCertainToken, createOrder);
+orderRouter.post("/order", validation(createOrderSchema), authorize, verifyPostCertainToken, createOrder);
 orderRouter.get("/orders", authorize, isAdmin, viewOrders);
 orderRouter.get(
   "/find/:userId",
