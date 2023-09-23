@@ -5,6 +5,8 @@ const {productRouter} = require("./routes/products/product.router")
 const {userRouter}= require("./routes/users/user.router")
 const {orderRouter} = require("./routes/orders/order.router")
 const {cartRouter} = require("./routes/cart/cart.router")
+const { wishlistRouter } = require("./routes/wishlists/wishlist.router")
+
 const app = express();
 
 app.use(express.json())
@@ -15,6 +17,7 @@ app.use(productRouter)
 app.use(userRouter)
 app.use(orderRouter)
 app.use(cartRouter)
+app.use(wishlistRouter)
 
 module.exports ={
     app,
