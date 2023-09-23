@@ -28,7 +28,7 @@ orderRouter.get(
   viewCertainUserOrder
 );
 orderRouter.get("/order/:id",authorize, isAdmin,  viewCertainOrder);
-orderRouter.put("/order/:id", authorize, isAdmin, modifyOrder);
+orderRouter.put("/order/:id", validation(createOrderSchema), authorize, isAdmin, modifyOrder);
 orderRouter.delete("/order/:id", authorize, isAdmin, deleteOrder);
 
 module.exports = {
