@@ -11,12 +11,50 @@ async function createOrder(req, res) {
   }
 }
 
+// async function viewOrders(req, res) {
+//   try {
+//     const orders = await Order.find({});
+//     res.status(200).json(orders);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 async function viewOrders(req, res) {
   try {
-    const orders = await Order.find({});
+    // Aggregate the data from the two collections
+    const orders = await Order.aggregate([
+      {
+        $match: {},
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      {
+        $unwind: "$productDetails",
+      },
+      {
+        $project: {
+          _id: 1,
+          userId: 1,
+          products: 1,
+          amount: 1,
+          address: 1,
+          status: 1,
+          productDetails: 1,
+        },
+      },
+    ]);
+
+    // Return the orders
     res.status(200).json(orders);
   } catch (error) {
-    console.log(error);
+    res.status(500).json("error getting user");
   }
 }
 
@@ -90,6 +128,7 @@ async function getOrdersWithUsers(req, res) {
       {
         $unwind: "$user", // Deconstruct the user array created by $lookup
       },
+
       {
         $project: {
           _id: 1,
