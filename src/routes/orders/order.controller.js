@@ -1,3 +1,4 @@
+const { User } = require("../../models/userModels");
 const { Order } = require("../../models/orderModels");
 
 async function createOrder(req, res) {
@@ -35,22 +36,22 @@ async function viewCertainUserOrder(req, res) {
   }
 }
 
-
-
 async function viewCertainOrder(req, res) {
   try {
     const { id } = req.params;
     const certainOrder = await Order.findById(id);
-    res.status(200).json(certainOrder)
+    res.status(200).json(certainOrder);
   } catch (error) {
     console.log(error);
-    res.status(500).json({message: error.message})
+    res.status(500).json({ message: error.message });
   }
 }
 async function modifyOrder(req, res) {
   try {
     const { id } = req.params;
-    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {new: true});
+    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!updatedOrder) {
       return res.status(404).json("can't find order with this id");
     }
@@ -75,11 +76,64 @@ async function deleteOrder(req, res) {
   }
 }
 
+async function getOrdersWithUsers(req, res) {
+  try {
+    const ordersWithUsers = await Order.aggregate([
+      {
+        $lookup: {
+          from: "users", // The name of the User collection
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user", // Deconstruct the user array created by $lookup
+      },
+      {
+        $project: {
+          _id: 1,
+          products: 1,
+          amount: 1,
+          address: 1,
+          status: 1,
+          "user.username": 1, // Include the username from the user document
+          "user.email": 1, // Include the email from the user document
+        },
+      },
+    ]);
+    // console.log(ordersWithUsers);
+    res.status(200).json(ordersWithUsers);
+  } catch (error) {
+    throw error;
+  }
+}
+
+// async function getOrdersWithUsers(req, res) {
+//   try {
+//     const orders = await Order.find({});
+//     return res.status(200).json(orders);
+//   } catch (error) {
+//     console.error("Error:", error); // Log the error for debugging
+//     res.status(500).json("error getting data");
+//   }
+// }
+
+// Example usage:
+// getOrdersWithUsers()
+//   .then((result) => {
+//     console.log("Orders with user details:", result);
+//   })
+//   .catch((error) => {
+//     console.error("Error:", error);
+//   });
+
 module.exports = {
   createOrder,
   viewOrders,
   modifyOrder,
   deleteOrder,
   viewCertainUserOrder,
-  viewCertainOrder
+  viewCertainOrder,
+  getOrdersWithUsers,
 };

@@ -6,6 +6,7 @@ const {
   deleteOrder,
   viewCertainUserOrder,
   viewCertainOrder,
+  getOrdersWithUsers
 } = require("./order.controller");
 const {
   isAdmin,
@@ -27,6 +28,7 @@ orderRouter.get(
   verifyCertainToken,
   viewCertainUserOrder
 );
+orderRouter.get("/user/order", authorize, isAdmin, getOrdersWithUsers)
 orderRouter.get("/order/:id",authorize, isAdmin,  viewCertainOrder);
 orderRouter.put("/order/:id", validation(createOrderSchema), authorize, isAdmin, modifyOrder);
 orderRouter.delete("/order/:id", authorize, isAdmin, deleteOrder);
