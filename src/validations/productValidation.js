@@ -5,6 +5,7 @@ const createProductSchema = yup.object({
     price: yup.number(),
     description: yup.string(),
     image: yup.string(),
+    category: yup.string(),
     reviews: yup.array(),
     ratings: yup.number()
 })
