@@ -102,18 +102,23 @@ async function modifyOrder(req, res) {
 
 async function deleteOrder(req, res) {
   try {
-    const { id } = req.params;
-    const order = await Order.findByIdAndDelete(id);
-    if (!order) {
-      return res.status(404).json("can't find product with this particular id");
+    const { userId } = req.params;
+
+    // Find and delete orders that match the userId
+    const result = await Order.deleteMany({ userId });
+
+    if (result.deletedCount > 0) {
+      res.status(200).json({ message: "Orders deleted successfully" });
+    } else {
+      res.status(404).json({ message: "No orders found for the specified userId" });
     }
-    return res.status(200).json("order deleted");
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: error.message });
-  }
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  } 
 }
 
+//this is to get the user, order details and the product the user ord
 async function getOrdersWithUsers(req, res) {
   try {
     const ordersWithUsers = await Order.aggregate([
@@ -128,6 +133,17 @@ async function getOrdersWithUsers(req, res) {
       {
         $unwind: "$user", // Deconstruct the user array created by $lookup
       },
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      {
+        $unwind: "$productDetails",
+      },
 
       {
         $project: {
@@ -138,6 +154,7 @@ async function getOrdersWithUsers(req, res) {
           status: 1,
           "user.username": 1, // Include the username from the user document
           "user.email": 1, // Include the email from the user document
+          productDetails: 1,
         },
       },
     ]);

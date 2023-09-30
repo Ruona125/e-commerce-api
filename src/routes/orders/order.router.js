@@ -28,10 +28,10 @@ orderRouter.get(
   verifyCertainToken,
   viewCertainUserOrder
 );
-orderRouter.get("/user/order", authorize, isAdmin, getOrdersWithUsers)
+orderRouter.get("/user/order", authorize, isAdmin, getOrdersWithUsers)//this is to get the user, order details and the product the user ordered
 orderRouter.get("/order/:id",authorize, isAdmin,  viewCertainOrder);
 orderRouter.put("/order/:id", validation(createOrderSchema), authorize, isAdmin, modifyOrder);
-orderRouter.delete("/order/:id", authorize, isAdmin, deleteOrder);
+orderRouter.delete("/order/:userId", authorize, verifyCertainToken, deleteOrder);
 
 module.exports = {
   orderRouter,
