@@ -1,6 +1,8 @@
 const { User } = require("../../models/userModels");
 const { Order } = require("../../models/orderModels");
+const { Product } = require("../../models/productModels");
 
+//this is to create order
 async function createOrder(req, res) {
   try {
     const order = await Order.create(req.body);
@@ -20,6 +22,8 @@ async function createOrder(req, res) {
 //   }
 // }
 
+//this is for admin to view the order and the product details.
+//it won't show the user details
 async function viewOrders(req, res) {
   try {
     // Aggregate the data from the two collections
@@ -58,22 +62,41 @@ async function viewOrders(req, res) {
   }
 }
 
+//this is for the user to view their order with the product details
 async function viewCertainUserOrder(req, res) {
   try {
     const { userId } = req.params;
-    const certainOrder = await Order.findOne({ userId });
+    const certainOrder = await Order.find({ userId });
 
-    if (certainOrder) {
-      return res.status(200).json(certainOrder);
-    } else {
-      return res.status(404).json({ message: "Order not found" });
+    if(certainOrder.length === 0){
+      return res.status(404).json({message: "order not found"})
     }
+
+    const orderDetails = [];
+
+    for (const order of certainOrder){
+      const productIds = order.products.map((product) => product.productId)
+      const products = await Product.find({ _id: { $in: productIds } });
+      
+      //conbine order and product details
+      const orderWithProductDetails = {
+        userId: order.userId,
+        products: order.products.map((product) => ({
+          productId: product.productId,
+          quantity: product.quantity,
+          productDetails: products.find((p) => p._id.equals(product.productId)),
+        })),
+      }
+      orderDetails.push(orderWithProductDetails)
+    }
+    res.status(200).json(orderDetails)
   } catch (error) {
     console.error(error); // Log the error for debugging
     return res.status(500).json({ message: "Internal server error" });
   }
 }
 
+//this is to view certain order
 async function viewCertainOrder(req, res) {
   try {
     const { id } = req.params;
@@ -84,6 +107,8 @@ async function viewCertainOrder(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+
+//this is to modify the order
 async function modifyOrder(req, res) {
   try {
     const { id } = req.params;
@@ -100,6 +125,7 @@ async function modifyOrder(req, res) {
   }
 }
 
+//this is to delete the order of the user
 async function deleteOrder(req, res) {
   try {
     const { userId } = req.params;
@@ -118,7 +144,7 @@ async function deleteOrder(req, res) {
   } 
 }
 
-//this is to get the user, order details and the product the user ord
+//this is for admin to get the user, order details and the product the user ordered
 async function getOrdersWithUsers(req, res) {
   try {
     const ordersWithUsers = await Order.aggregate([
