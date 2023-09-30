@@ -1,4 +1,7 @@
 const { Cart } = require("../../models/cartModels");
+const{mongoose} = require("mongoose");
+const { Product } = require("../../models/productModels");
+
 
 async function createCart(req, res) {
   try {
@@ -22,17 +25,44 @@ async function viewCart(req, res) {
 async function viewCertainUserCart(req, res) {
   try {
     const { userId } = req.params;
-    const certainCart = await Cart.findOne({ userId }); // Provide a query object here
-    if (certainCart) {
-      res.status(200).json(certainCart);
-    } else {
-      res.status(404).json({ message: 'Cart not found' }); // Handle the case when the cart is not found
+
+    // Find all carts that belong to the user based on userId
+    const carts = await Cart.find({ userId });
+
+    if (carts.length === 0) {
+      return res.status(404).json({ message: "Carts not found" });
     }
+
+    // Create an array to store cart details
+    const cartDetails = [];
+
+    for (const cart of carts) {
+      const productIds = cart.products.map((product) => product.productId);
+
+      const products = await Product.find({ _id: { $in: productIds } });
+
+      // Combine the cart and product details
+      const cartWithProductDetails = {
+        userId: cart.userId,
+        products: cart.products.map((product) => ({
+          productId: product.productId,
+          quantity: product.quantity,
+          productDetails: products.find((p) => p._id.equals(product.productId)),
+        })),
+      };
+
+      cartDetails.push(cartWithProductDetails);
+    }
+
+    res.status(200).json(cartDetails);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Internal server error' }); // Handle other errors
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ message: "Internal server error" });
   }
 }
+
+
+
 
 
 async function deleteCart(req, res) {
