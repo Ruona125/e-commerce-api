@@ -95,7 +95,7 @@ async function login(req, res) {
     // console.log(decode.isAdmin) 
 
     // Return the token to the client
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({user, token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
