@@ -22,7 +22,7 @@ async function viewWishlist(req, res) {
 //this is for the users view the wishlist that belongs to them
 async function viewCertainWishlist(req, res) {
   try {
-    const { userId } = req.params;
+    const { userId } = req.params; 
 
     const wishlists = await Wishlist.find({ userId });
 
