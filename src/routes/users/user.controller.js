@@ -87,14 +87,14 @@ async function login(req, res) {
 
     // Generate a JWT token containing the user's ID
     const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-secret-key", {
-      expiresIn: "1h", // Token expiration time (adjust as needed)
+      expiresIn: "59s", // Token expiration time (adjust as needed)
     });
     
     //this is to check what's stored in the token
     // const decode = jwt.decode(token)
     // console.log(decode.isAdmin) 
 
-    // Return the token to the client
+    // Return the token to the client  
     res.status(200).json({user, token });
   } catch (error) {
     console.error(error);
