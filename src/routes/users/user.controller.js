@@ -87,7 +87,7 @@ async function login(req, res) {
 
     // Generate a JWT token containing the user's ID
     const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-secret-key", {
-      expiresIn: "59s", // Token expiration time (adjust as needed)
+      expiresIn: "1hr", // Token expiration time (adjust as needed)
     });
     
     //this is to check what's stored in the token
