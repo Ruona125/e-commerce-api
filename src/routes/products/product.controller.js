@@ -12,7 +12,7 @@ async function createProduct(req, res) {
 }
 function test(req, res) {
   res.status(200).json("test");
-  console.log(test);
+  console.log(test); 
 }
 async function getCertainProduct(req, res) {
   try {
