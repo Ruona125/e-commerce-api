@@ -108,6 +108,32 @@ async function login(req, res) {
   }
 }
 
+async function refresh(req, res) {
+  try {
+    const { refreshToken } = req.body;
+    
+    // Verify the refresh token
+    const decoded = jwt.verify(refreshToken, "your-refresh-token");
+
+    // Check if the refresh token is valid
+    if (decoded.userId) {
+      // Generate a new access token
+      const token = jwt.sign({ userId: decoded.userId, isAdmin: decoded.isAdmin }, "your-secret-key", {
+        expiresIn: "1hr", // Token expiration time (adjust as needed)
+      });
+
+      // Return the new access token to the client
+      return res.status(200).json({ token });
+    } else {
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+
 
 
 module.exports = {
@@ -116,4 +142,5 @@ module.exports = {
   viewCertainUsers,
   deleteCertainUser,
   login,
+  refresh
 };
