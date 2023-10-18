@@ -80,27 +80,35 @@ async function login(req, res) {
     }
 
     // Check if the provided password matches the stored password
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: "invalid Login details" });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid login details" });
     }
 
     // Generate a JWT token containing the user's ID
     const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-secret-key", {
       expiresIn: "1hr", // Token expiration time (adjust as needed)
     });
-    
-    //this is to check what's stored in the token
-    // const decode = jwt.decode(token)
-    // console.log(decode.isAdmin) 
 
-    // Return the token to the client  
-    res.status(200).json({user, token });
+    const refreshToken = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-refresh-token", {
+      expiresIn: "365d", // Token expiration time (adjust as needed)
+    });
+
+    // Convert the user document to a plain JavaScript object
+    const userObject = user.toObject();
+
+    // Remove the password field from the user object
+    delete userObject.password;
+
+    // Return the token and user object to the client
+    return res.status(201).json({ user: userObject, token, refreshToken });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+
 
 module.exports = {
   registerUser,
