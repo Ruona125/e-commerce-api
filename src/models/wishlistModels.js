@@ -11,7 +11,7 @@ const WishlistSchema = new mongoose.Schema({
         type: Number,
         default: 1,
       },
-    },
+    }, 
   ],
 });
 
