@@ -1,7 +1,6 @@
 const { Cart } = require("../../models/cartModels");
-const{mongoose} = require("mongoose");
+const { mongoose } = require("mongoose");
 const { Product } = require("../../models/productModels");
-
 
 async function createCart(req, res) {
   try {
@@ -61,10 +60,6 @@ async function viewCertainUserCart(req, res) {
   }
 }
 
-
-
-
-
 async function deleteCart(req, res) {
   try {
     const { id } = req.params;
@@ -82,24 +77,32 @@ async function deleteCart(req, res) {
 async function modifyCart(req, res) {
   try {
     const { id } = req.params;
-    const updatedCart = await Cart.findByIdAndUpdate(id, req.body, { new: true });
-    
-    if (!updatedCart) {
+    const { userId } = req.user; // Get the user ID from the decoded token
+
+    // Check if the user has the correct permissions to modify the cart
+    const cart = await Cart.findById(id);
+    if (!cart) {
       return res.status(404).json("Can't find cart");
     }
 
+    if (cart.userId !== userId) {
+      return res.status(403).json("Unauthorized: You can only modify your own cart");
+    }
+
+    // Now, you can update the cart
+    const updatedCart = await Cart.findByIdAndUpdate(id, req.body, { new: true });
+    
     return res.status(200).json(updatedCart);
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
-} 
-
+}
 
 module.exports = {
   createCart,
   viewCart,
   viewCertainUserCart,
   deleteCart,
-  modifyCart
+  modifyCart,
 };

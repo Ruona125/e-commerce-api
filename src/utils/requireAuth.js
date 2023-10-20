@@ -89,9 +89,26 @@ function verifyPostCertainToken(req, res, next) {
   }
 }
 
+function authorizeUser(req, res, next) {
+  const token = req.headers.authorization; // Assuming the token is in the 'Authorization' header
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, "your-secret-key"); // Use the same secret key used for token generation
+    req.user = decodedToken; // Make the user object available in the request for later use
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
+}
+
 module.exports = {
   isAdmin,
   authorize,
   verifyCertainToken,
   verifyPostCertainToken,
+  authorize,
+  authorizeUser
 };

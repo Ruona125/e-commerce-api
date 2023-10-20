@@ -87,7 +87,7 @@ async function login(req, res) {
 
     // Generate a JWT token containing the user's ID
     const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-secret-key", {
-      expiresIn: "15s", // Token expiration time (adjust as needed)
+      expiresIn: "1hr", // Token expiration time (adjust as needed)
     });
 
     const refreshToken = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, "your-refresh-token", {
@@ -119,7 +119,7 @@ async function refresh(req, res) {
     if (decoded.userId) {
       // Generate a new access token
       const token = jwt.sign({ userId: decoded.userId, isAdmin: decoded.isAdmin }, "your-secret-key", {
-        expiresIn: "15s", // Token expiration time (adjust as needed)
+        expiresIn: "1hr", // Token expiration time (adjust as needed)
       });
 
       // Return the new access token to the client
