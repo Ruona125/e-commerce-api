@@ -42,6 +42,7 @@ async function viewCertainUserCart(req, res) {
 
       // Combine the cart and product details
       const cartWithProductDetails = {
+        id: cart.id,
         userId: cart.userId,
         products: cart.products.map((product) => ({
           productId: product.productId,
@@ -77,8 +78,8 @@ async function deleteCart(req, res) {
 async function modifyCart(req, res) {
   try {
     const { id } = req.params;
-    const { userId } = req.user; // Get the user ID from the decoded token
-
+    const { userId } = req.user;
+    
     // Check if the user has the correct permissions to modify the cart
     const cart = await Cart.findById(id);
     if (!cart) {
@@ -89,15 +90,18 @@ async function modifyCart(req, res) {
       return res.status(403).json("Unauthorized: You can only modify your own cart");
     }
 
-    // Now, you can update the cart
+    // Update the cart based on the request body
     const updatedCart = await Cart.findByIdAndUpdate(id, req.body, { new: true });
-    
+
     return res.status(200).json(updatedCart);
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 }
+
+
+
 
 module.exports = {
   createCart,

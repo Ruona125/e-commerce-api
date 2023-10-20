@@ -8,7 +8,7 @@ const cartRouter = express.Router();
 cartRouter.post("/cart", validation(createCartSchema), authorize, verifyPostCertainToken, createCart);
 cartRouter.get("/cart", authorize, isAdmin, viewCart)
 cartRouter.get("/cart/:userId", authorize, verifyCertainToken, viewCertainUserCart)
-cartRouter.put("/cart/:id", validation(createCartSchema), authorize, authorizeUser, modifyCart)//come back and fix this bug later
+cartRouter.put("/cart/:id", authorize, authorizeUser, modifyCart)//come back and fix this bug later
 cartRouter.delete("/cart/:id", authorize, deleteCart)
  
 module.exports = {
