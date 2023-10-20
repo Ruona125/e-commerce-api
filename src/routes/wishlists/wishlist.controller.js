@@ -37,6 +37,7 @@ async function viewCertainWishlist(req, res) {
       const products = await Product.find({ _id: { $in: productIds } });
 
       const wishlistWithProductDetails = {
+        id: wishlist.id,
         userId: wishlist.userId,
         products: wishlist.products.map((product) => ({
           productId: product.productId,
@@ -68,16 +69,28 @@ async function deleteWishlist(req, res) {
 async function modifyWishlist(req, res) {
   try {
     const { id } = req.params;
+    const { userId } = req.user;
+
+    //check if the user has the correct permission to modify the wishlist
+    const withList = await Wishlist.findById(id)
+    if(!withList){
+      return res.status(404).json("can't find witshlist with this id")
+    }
+
+    if(withList.userId !== userId){
+      return res.status(403).json("unauthorized: You can't see this")
+    }
     const updatedWishlist = await Wishlist.findByIdAndUpdate(id, req.body, {
       new: true,
     });
 
-    if (!updatedWishlist) {
-      return res.status(404).json("can't find wishlist");
-    }
+    // if (!updatedWishlist) {
+    //   return res.status(404).json("can't find wishlist");
+    // }
     return res.status(200).json(updatedWishlist);
   } catch (error) {
-    res.status(400).json("error modifying wishlist");
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
   }
 }
 
