@@ -10,10 +10,12 @@ async function createProduct(req, res) {
     res.status(500).json("error creating users");
   }
 }
+
 function test(req, res) {
   res.status(200).json("test");
   console.log(test); 
 }
+
 async function getCertainProduct(req, res) {
   try {
     const { id } = req.params;
