@@ -35,7 +35,7 @@ async function getAllProducts(req, res) {
     console.log(error);
   }
 }
-
+ 
 async function deleteCertainProduct(req, res) {
   try {
     const { id } = req.params;
