@@ -1,6 +1,7 @@
 const { Cart } = require("../../models/cartModels");
-const { mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const { Product } = require("../../models/productModels");
+const jwt = require("jsonwebtoken");
 
 async function createCart(req, res) {
   try {
@@ -32,8 +33,9 @@ async function viewCertainUserCart(req, res) {
       return res.status(404).json({ message: "Carts not found" });
     }
 
-    // Create an array to store cart details
+    // Initialize variables to store cart details and total cart count
     const cartDetails = [];
+    let totalCartCount = 0;
 
     for (const cart of carts) {
       const productIds = cart.products.map((product) => product.productId);
@@ -52,14 +54,22 @@ async function viewCertainUserCart(req, res) {
       };
 
       cartDetails.push(cartWithProductDetails);
+
+      // Increment the total cart count
+      totalCartCount += 1;
     }
 
-    res.status(200).json(cartDetails);
+    // Return the cart details along with the total cart count
+    res.status(200).json({
+      totalCarts: totalCartCount,
+      cartDetails: cartDetails,
+    });
   } catch (error) {
     console.error(error); // Log the error for debugging
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
 
 async function deleteCart(req, res) {
   try {
@@ -100,6 +110,32 @@ async function modifyCart(req, res) {
   }
 }
 
+const userCartCounts = {};
+
+// Middleware to extract user ID from JWT token
+function getUserIdFromToken(token) {
+  const decodedToken = jwt.verify(token, "your-secret-key");
+  console.log(decodedToken.userId)
+  console.log("hello")
+  return decodedToken.userId;
+}
+
+async function cartCount(req, res){
+  try{
+    
+    if (!req.headers.authorization) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  
+    const userId = getUserIdFromToken(req.headers.authorization);
+    const cartCount = userCartCounts[userId] || 0;
+  
+    res.status(200).json({ count: cartCount });
+  }catch(error){
+    console.log(error.message)
+    res.status(500).json({message: error.message})
+  }
+}
 
 
 
@@ -109,4 +145,5 @@ module.exports = {
   viewCertainUserCart,
   deleteCart,
   modifyCart,
+  cartCount
 };
