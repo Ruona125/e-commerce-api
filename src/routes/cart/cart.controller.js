@@ -22,6 +22,59 @@ async function viewCart(req, res) {
   }
 }
 
+//this is the one that returns an array
+// async function viewCertainUserCart(req, res) {
+//   try {
+//     const { userId } = req.params;
+
+//     // Find all carts that belong to the user based on userId
+//     const carts = await Cart.find({ userId });
+
+//     if (carts.length === 0) {
+//       return res.status(404).json({ message: "Carts not found" });
+//     }
+
+//     // Initialize an array to store cart details
+//     const cartDetails = [];
+
+//     for (const cart of carts) {
+//       const productIds = cart.products.map((product) => product.productId);
+
+//       const products = await Product.find({ _id: { $in: productIds } });
+
+//       // Combine the cart and product details
+//       const cartWithProductDetails = {
+//         id: cart.id,
+//         userId: cart.userId,
+//         products: cart.products.map((product) => ({
+//           productId: product.productId,
+//           quantity: product.quantity,
+//           productDetails: products.find((p) => p._id.equals(product.productId)),
+//         })),
+//       };
+
+//       cartDetails.push(cartWithProductDetails);
+//     }
+
+//     // Calculate the total cart count
+//     const totalCartCount = cartDetails.length;
+
+//     // Return the response as an array including totalCartCount
+//     const response = [
+//       {
+//         totalCarts: totalCartCount,
+//         cartDetails: cartDetails,
+//       },
+//     ];
+
+//     res.status(200).json(response);
+//   } catch (error) {
+//     console.error(error); // Log the error for debugging
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// }
+
+//this is the one that returns an object
 async function viewCertainUserCart(req, res) {
   try {
     const { userId } = req.params;
@@ -33,9 +86,8 @@ async function viewCertainUserCart(req, res) {
       return res.status(404).json({ message: "Carts not found" });
     }
 
-    // Initialize variables to store cart details and total cart count
+    // Initialize an array to store cart details
     const cartDetails = [];
-    let totalCartCount = 0;
 
     for (const cart of carts) {
       const productIds = cart.products.map((product) => product.productId);
@@ -54,21 +106,30 @@ async function viewCertainUserCart(req, res) {
       };
 
       cartDetails.push(cartWithProductDetails);
-
-      // Increment the total cart count
-      totalCartCount += 1;
     }
 
-    // Return the cart details along with the total cart count
-    res.status(200).json({
+    // Calculate the total cart count
+    const totalCartCount = cartDetails.length;
+
+    // Return the cart details as an array along with totalCartCount
+    const response = {
       totalCarts: totalCartCount,
       cartDetails: cartDetails,
-    });
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     console.error(error); // Log the error for debugging
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+
+
+
+
+
+
 
 
 async function deleteCart(req, res) {

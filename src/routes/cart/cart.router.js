@@ -11,7 +11,7 @@ cartRouter.get("/cart/:userId", authorize, verifyCertainToken, viewCertainUserCa
 cartRouter.get("/cart/count", cartCount)
 cartRouter.put("/cart/:id", authorize, authorizeUser, modifyCart)//come back and fix this bug later
 cartRouter.delete("/cart/:id", authorize, authorizeUser, deleteCart)
-
+ 
 module.exports = {
     cartRouter
 }
