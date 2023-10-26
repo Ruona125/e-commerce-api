@@ -1,6 +1,25 @@
 const { User } = require("../../models/userModels");
 const { Order } = require("../../models/orderModels");
 const { Product } = require("../../models/productModels");
+const {Cart} = require("../../models/cartModels")
+
+//this is to create order and clear the carts
+// async function createOrder(req, res) {
+//   try {
+//     const order = await Order.create(req.body);
+    
+//     // Get the userId from the created order
+//     const userId = order.userId;
+    
+//     // Remove all carts associated with the user's userId
+//     await Cart.deleteMany({ userId: userId });
+
+//     res.status(200).json(order);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json("Error creating orders");
+//   }
+// }
 
 //this is to create order
 async function createOrder(req, res) {
