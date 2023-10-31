@@ -22,15 +22,40 @@ const {Cart} = require("../../models/cartModels")
 // }
 
 //this is to create order
+// async function createOrder(req, res) {
+//   try {
+//     const order = await Order.create(req.body);
+//     res.status(200).json(order);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json("error creating orders");
+//   }
+// }
+
+//this is the controller to create order with totalAmount
 async function createOrder(req, res) {
   try {
-    const order = await Order.create(req.body);
+    const orderData = req.body;
+    // Calculate the total amount by iterating over the products array
+    const totalAmount = orderData.products.reduce((total, product) => {
+      // Calculate the product's total price by multiplying quantity and price
+      const productTotal = product.quantity * product.price;
+      return total + productTotal;
+    }, 0); // Start with an initial total of 0
+
+    // Set the calculated totalAmount in the orderData
+    orderData.totalAmount = totalAmount;
+
+    // Create the order with the updated orderData
+    const order = await Order.create(orderData);
+
     res.status(200).json(order);
   } catch (error) {
     console.log(error);
     res.status(500).json("error creating orders");
   }
 }
+
 
 // async function viewOrders(req, res) {
 //   try {
