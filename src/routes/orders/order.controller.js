@@ -1,16 +1,16 @@
 const { User } = require("../../models/userModels");
 const { Order } = require("../../models/orderModels");
 const { Product } = require("../../models/productModels");
-const {Cart} = require("../../models/cartModels")
+const { Cart } = require("../../models/cartModels");
 
 //this is to create order and clear the carts
 // async function createOrder(req, res) {
 //   try {
 //     const order = await Order.create(req.body);
-    
+
 //     // Get the userId from the created order
 //     const userId = order.userId;
-    
+
 //     // Remove all carts associated with the user's userId
 //     await Cart.deleteMany({ userId: userId });
 
@@ -25,6 +25,8 @@ const {Cart} = require("../../models/cartModels")
 async function createOrder(req, res) {
   try {
     const order = await Order.create(req.body);
+    const userId = order.userId;
+    await Cart.deleteMany({userId: userId})
     res.status(200).json(order);
   } catch (error) {
     console.log(error);
@@ -55,7 +57,6 @@ async function createOrder(req, res) {
 //     res.status(500).json("error creating orders");
 //   }
 // }
-
 
 async function viewOrders(req, res) {
   try {
@@ -130,7 +131,9 @@ async function viewCertainUserOrder(req, res) {
       const orderWithProductDetails = {
         userId: order.userId,
         products: order.products.map((product) => {
-          const productDetails = products.find((p) => p._id.equals(product.productId));
+          const productDetails = products.find((p) =>
+            p._id.equals(product.productId)
+          );
           const subTotal = productDetails.price * product.quantity;
           mainTotal += subTotal; // Add the subTotal to mainTotal
           return {
@@ -151,7 +154,6 @@ async function viewCertainUserOrder(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-
 
 async function viewOnlyUserOrder(req, res) {
   try {
@@ -175,18 +177,22 @@ async function viewOnlyUserOrder(req, res) {
     }, 0);
 
     // Extract userId and status from the first order
-    const { userId: firstUserId, status: firstStatus, _id:_id } = populatedOrders[0];
+    const {
+      userId: firstUserId,
+      status: firstStatus,
+      _id: _id,
+    } = populatedOrders[0];
 
     // Extract product details (name, price, description) from the populated orders
     const productsWithDetails = populatedOrders.reduce((acc, order) => {
       order.products.forEach((product) => {
-        const { name, price, description, category, image, } = product.productId;
+        const { name, price, description, category, image } = product.productId;
         acc.push({
           productId: product.productId,
           name,
           price,
           description,
-          image, 
+          image,
           category,
           quantity: product.quantity,
           price: product.price,
@@ -207,12 +213,6 @@ async function viewOnlyUserOrder(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-
-
-
-
-
-
 
 //this is to view certain order
 async function viewCertainOrder(req, res) {
@@ -254,12 +254,14 @@ async function deleteOrder(req, res) {
     if (result.deletedCount > 0) {
       res.status(200).json({ message: "Orders deleted successfully" });
     } else {
-      res.status(404).json({ message: "No orders found for the specified userId" });
+      res
+        .status(404)
+        .json({ message: "No orders found for the specified userId" });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
-  } 
+  }
 }
 
 //this is for admin to get the user, order details and the product the user ordered
@@ -336,5 +338,5 @@ module.exports = {
   viewCertainUserOrder,
   viewCertainOrder,
   getOrdersWithUsers,
-  viewOnlyUserOrder
+  viewOnlyUserOrder,
 };
