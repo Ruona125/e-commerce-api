@@ -123,19 +123,24 @@ async function viewCertainUserOrder(req, res) {
       const productIds = order.products.map((product) => product.productId);
       const products = await Product.find({ _id: { $in: productIds } });
 
+      // Initialize mainTotal to 0 for this order
+      let mainTotal = 0;
+
       // Combine order and product details
       const orderWithProductDetails = {
         userId: order.userId,
         products: order.products.map((product) => {
           const productDetails = products.find((p) => p._id.equals(product.productId));
-          const subTotal = productDetails.price * product.quantity; // Calculate subTotal
+          const subTotal = productDetails.price * product.quantity;
+          mainTotal += subTotal; // Add the subTotal to mainTotal
           return {
             productId: product.productId,
             quantity: product.quantity,
             productDetails: productDetails,
-            subTotal: subTotal, // Include subTotal in the response
+            subTotal: subTotal,
           };
         }),
+        mainTotal: mainTotal, // Include mainTotal in the response
       };
       orderDetails.push(orderWithProductDetails);
     }
@@ -146,6 +151,7 @@ async function viewCertainUserOrder(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
 
 async function viewOnlyUserOrder(req, res) {
   try {
