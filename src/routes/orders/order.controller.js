@@ -140,6 +140,66 @@ async function viewCertainUserOrder(req, res) {
   }
 }
 
+async function viewOnlyUserOrder(req, res) {
+  try {
+    const userId = req.params.userId;
+
+    const orders = await Order.find({ userId: userId });
+
+    if (orders.length === 0) {
+      return res.status(404).json({ message: "No orders found for the user." });
+    }
+
+    // Populate product details for each product in all orders
+    const populatedOrders = await Order.populate(orders, {
+      path: "products.productId",
+      model: "Product", // The name of the Product model
+    });
+
+    // Calculate the totalAmount by iterating over all orders
+    const totalAmount = populatedOrders.reduce((total, order) => {
+      return total + order.totalAmount;
+    }, 0);
+
+    // Extract userId and status from the first order
+    const { userId: firstUserId, status: firstStatus } = populatedOrders[0];
+
+    // Extract product details (name, price, description) from the populated orders
+    const productsWithDetails = populatedOrders.reduce((acc, order) => {
+      order.products.forEach((product) => {
+        const { name, price, description, category, image } = product.productId;
+        acc.push({
+          productId: product.productId,
+          name,
+          price,
+          description,
+          image, 
+          category,
+          quantity: product.quantity,
+          price: product.price,
+        });
+      });
+      return acc;
+    }, []);
+
+    res.json({
+      userId: firstUserId,
+      status: firstStatus,
+      totalAmount: totalAmount,
+      products: productsWithDetails,
+    });
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
+
+
+
+
+
 //this is to view certain order
 async function viewCertainOrder(req, res) {
   try {
@@ -262,4 +322,5 @@ module.exports = {
   viewCertainUserOrder,
   viewCertainOrder,
   getOrdersWithUsers,
+  viewOnlyUserOrder
 };

@@ -6,7 +6,8 @@ const {
   deleteOrder,
   viewCertainUserOrder,
   viewCertainOrder,
-  getOrdersWithUsers
+  getOrdersWithUsers,
+  viewOnlyUserOrder
 } = require("./order.controller");
 const {
   isAdmin,
@@ -28,6 +29,7 @@ orderRouter.get(
   verifyCertainToken,
   viewCertainUserOrder
 );
+orderRouter.get("/user/order/:userId", viewOnlyUserOrder)
 orderRouter.get("/user/order", authorize, isAdmin, getOrdersWithUsers)//this is to get the user, order details and the product the user ordered
 orderRouter.get("/order/:id",authorize, isAdmin,  viewCertainOrder);
 orderRouter.put("/order/:id", validation(createOrderSchema), authorize, isAdmin, modifyOrder);
