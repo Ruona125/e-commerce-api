@@ -22,39 +22,39 @@ const {Cart} = require("../../models/cartModels")
 // }
 
 //this is to create order
-// async function createOrder(req, res) {
-//   try {
-//     const order = await Order.create(req.body);
-//     res.status(200).json(order);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json("error creating orders");
-//   }
-// }
-
-//this is the controller to create order with totalAmount
 async function createOrder(req, res) {
   try {
-    const orderData = req.body;
-    // Calculate the total amount by iterating over the products array
-    const totalAmount = orderData.products.reduce((total, product) => {
-      // Calculate the product's total price by multiplying quantity and price
-      const productTotal = product.quantity * product.price;
-      return total + productTotal;
-    }, 0); // Start with an initial total of 0
-
-    // Set the calculated totalAmount in the orderData
-    orderData.totalAmount = totalAmount;
-
-    // Create the order with the updated orderData
-    const order = await Order.create(orderData);
-
+    const order = await Order.create(req.body);
     res.status(200).json(order);
   } catch (error) {
     console.log(error);
     res.status(500).json("error creating orders");
   }
 }
+
+//this is the controller to create order with totalAmount
+// async function createOrder(req, res) {
+//   try {
+//     const orderData = req.body;
+//     // Calculate the total amount by iterating over the products array
+//     const totalAmount = orderData.products.reduce((total, product) => {
+//       // Calculate the product's total price by multiplying quantity and price
+//       const productTotal = product.quantity * product.price;
+//       return total + productTotal;
+//     }, 0); // Start with an initial total of 0
+
+//     // Set the calculated totalAmount in the orderData
+//     orderData.totalAmount = totalAmount;
+
+//     // Create the order with the updated orderData
+//     const order = await Order.create(orderData);
+
+//     res.status(200).json(order);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json("error creating orders");
+//   }
+// }
 
 
 async function viewOrders(req, res) {
@@ -107,33 +107,40 @@ async function viewOrders(req, res) {
 // }
 
 //this is for the user to view their order with the product details
+
 async function viewCertainUserOrder(req, res) {
   try {
     const { userId } = req.params;
     const certainOrder = await Order.find({ userId });
 
-    if(certainOrder.length === 0){
-      return res.status(404).json({message: "order not found"})
+    if (certainOrder.length === 0) {
+      return res.status(404).json({ message: "Order not found" });
     }
 
     const orderDetails = [];
 
-    for (const order of certainOrder){
-      const productIds = order.products.map((product) => product.productId)
+    for (const order of certainOrder) {
+      const productIds = order.products.map((product) => product.productId);
       const products = await Product.find({ _id: { $in: productIds } });
-      
-      //conbine order and product details
+
+      // Combine order and product details
       const orderWithProductDetails = {
         userId: order.userId,
-        products: order.products.map((product) => ({
-          productId: product.productId,
-          quantity: product.quantity,
-          productDetails: products.find((p) => p._id.equals(product.productId)),
-        })),
-      }
-      orderDetails.push(orderWithProductDetails)
+        products: order.products.map((product) => {
+          const productDetails = products.find((p) => p._id.equals(product.productId));
+          const subTotal = productDetails.price * product.quantity; // Calculate subTotal
+          return {
+            productId: product.productId,
+            quantity: product.quantity,
+            productDetails: productDetails,
+            subTotal: subTotal, // Include subTotal in the response
+          };
+        }),
+      };
+      orderDetails.push(orderWithProductDetails);
     }
-    res.status(200).json(orderDetails)
+
+    res.status(200).json(orderDetails);
   } catch (error) {
     console.error(error); // Log the error for debugging
     return res.status(500).json({ message: "Internal server error" });
