@@ -12,7 +12,7 @@ async function createCart(req, res) {
     res.staus(500).json("error creating cart");
   }
 }
-
+ 
 async function viewCart(req, res) {
   try {
     const cart = await Cart.find({});

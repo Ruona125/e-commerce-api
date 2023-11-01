@@ -9,7 +9,7 @@ const createProductSchema = yup.object({
     reviews: yup.array(),
     ratings: yup.number()
 })
-
+ 
 module.exports = {
     createProductSchema,
-}
+}  
