@@ -57,54 +57,54 @@ async function createOrder(req, res) {
 }
 
 
-// async function viewOrders(req, res) {
-//   try {
-//     const orders = await Order.find({});
-//     res.status(200).json(orders);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+async function viewOrders(req, res) {
+  try {
+    const orders = await Order.find({});
+    res.status(200).json(orders);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 //this is for admin to view the order and the product details.
 //it won't show the user details
-async function viewOrders(req, res) {
-  try {
-    // Aggregate the data from the two collections
-    const orders = await Order.aggregate([
-      {
-        $match: {},
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "products.productId",
-          foreignField: "_id",
-          as: "productDetails",
-        },
-      },
-      {
-        $unwind: "$productDetails",
-      },
-      {
-        $project: {
-          _id: 1,
-          userId: 1,
-          products: 1,
-          amount: 1,
-          address: 1,
-          status: 1,
-          productDetails: 1,
-        },
-      },
-    ]);
+// async function viewOrders(req, res) {
+//   try {
+//     // Aggregate the data from the two collections
+//     const orders = await Order.aggregate([
+//       {
+//         $match: {},
+//       },
+//       {
+//         $lookup: {
+//           from: "products",
+//           localField: "products.productId",
+//           foreignField: "_id",
+//           as: "productDetails",
+//         },
+//       },
+//       {
+//         $unwind: "$productDetails",
+//       },
+//       {
+//         $project: {
+//           _id: 1,
+//           userId: 1,
+//           products: 1,
+//           amount: 1,
+//           address: 1,
+//           status: 1,
+//           productDetails: 1,
+//         },
+//       },
+//     ]);
 
-    // Return the orders
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json("error getting user");
-  }
-}
+//     // Return the orders
+//     res.status(200).json(orders);
+//   } catch (error) {
+//     res.status(500).json("error getting user");
+//   }
+// }
 
 //this is for the user to view their order with the product details
 async function viewCertainUserOrder(req, res) {
