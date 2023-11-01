@@ -162,12 +162,12 @@ async function viewOnlyUserOrder(req, res) {
     }, 0);
 
     // Extract userId and status from the first order
-    const { userId: firstUserId, status: firstStatus } = populatedOrders[0];
+    const { userId: firstUserId, status: firstStatus, _id:_id } = populatedOrders[0];
 
     // Extract product details (name, price, description) from the populated orders
     const productsWithDetails = populatedOrders.reduce((acc, order) => {
       order.products.forEach((product) => {
-        const { name, price, description, category, image } = product.productId;
+        const { name, price, description, category, image, } = product.productId;
         acc.push({
           productId: product.productId,
           name,
@@ -183,6 +183,7 @@ async function viewOnlyUserOrder(req, res) {
     }, []);
 
     res.json({
+      _id: _id,
       userId: firstUserId,
       status: firstStatus,
       totalAmount: totalAmount,
