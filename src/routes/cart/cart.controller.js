@@ -23,6 +23,51 @@ async function viewCart(req, res) {
 }
 
 //this is the one that returns an array
+// async function viewCertainUserCart(req, res) {
+//   try {
+//     const { userId } = req.params;
+//     const certainCart = await Cart.find({ userId });
+
+//     if (certainCart.length === 0) {
+//       return res.status(404).json({ message: "Cart not found" });
+//     }
+
+//     const cartDetails = [];
+
+//     for (const cart of certainCart) {
+//       const productIds = cart.products.map((product) => product.productId);
+//       const products = await Product.find({ _id: { $in: productIds } });
+
+//       let mainTotal = 0;
+
+//       const cartWithProductDetails = {
+//         userId: cart.userId,
+//         totalProducts: cart.products.length, // Total number of products in the cart
+//         products: cart.products.map((product) => {
+//           const productDetails = products.find((p) =>
+//             p._id.equals(product.productId)
+//           );
+//           const subTotal = productDetails.price * product.quantity;
+//           mainTotal += subTotal;
+//           return {
+//             productId: product.productId,
+//             quantity: product.quantity,
+//             productDetails: productDetails,
+//             subTotal: subTotal,
+//           };
+//         }),
+//         mainTotal: mainTotal,
+//       };
+//       cartDetails.push(cartWithProductDetails);
+//     }
+
+//     res.status(200).json(cartDetails);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// }
+
 async function viewCertainUserCart(req, res) {
   try {
     const { userId } = req.params;
