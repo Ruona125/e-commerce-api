@@ -48,7 +48,8 @@ async function stripePayment(req, res) {
 
     res.status(200).json({ message: "Payment successful" });
   } catch (err) {
-    res.status(500).json({ error: error.message });
+    console.log(err)
+    res.status(500).json(err);
   }
 }
 
