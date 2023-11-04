@@ -6,10 +6,10 @@ const createProductSchema = yup.object({
     description: yup.string(),
     image: yup.string(),
     category: yup.string(),
-    reviews: yup.array(),
+    // reviews: yup.array(),
     ratings: yup.number()
 })
  
 module.exports = {
     createProductSchema,
-}  
+}   

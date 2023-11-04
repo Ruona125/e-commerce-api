@@ -290,26 +290,35 @@ async function getOrdersWithUsers(req, res) {
       {
         $unwind: "$productDetails",
       },
-
       {
         $project: {
           _id: 1,
-          products: 1,
-          amount: 1,
+          userId: 1,
+          quantity: { $arrayElemAt: ["$products.quantity", 0] }, // Extract the quantity of the first product
           address: 1,
           status: 1,
-          "user.username": 1, // Include the username from the user document
-          "user.email": 1, // Include the email from the user document
-          productDetails: 1,
+          user: {
+            _id: 1,
+            username: 1,
+            email: 1,
+            isAdmin: 1,
+            createdAt: 1,
+            __v: 1,
+          },
+          productDetails: 1, // Include the entire product details object
         },
       },
     ]);
-    // console.log(ordersWithUsers);
+
     res.status(200).json(ordersWithUsers);
   } catch (error) {
     throw error;
   }
 }
+
+
+
+
 
 // async function getOrdersWithUsers(req, res) {
 //   try {
