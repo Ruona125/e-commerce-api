@@ -94,10 +94,61 @@ async function modifyWishlist(req, res) {
   }
 }
 
+async function getWishlistWithUsers(req, res) {
+  try {
+    const wishlistWithUsers = await Wishlist.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'products.productId',
+          foreignField: '_id',
+          as: 'productDetails',
+        },
+      },
+      {
+        $unwind: '$productDetails',
+      },
+      {
+        $project: {
+          _id: 1,
+          userId: 1,
+          // quantity: '$products.quantity',
+          user: {
+            _id: 1,
+            username: 1,
+            email: 1,
+            isAdmin: 1,
+            createdAt: 1,
+          },
+          productDetails: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(wishlistWithUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+
 module.exports = {
   createWishlist,
   viewCertainWishlist,
   viewWishlist,
   modifyWishlist,
   deleteWishlist,
+  getWishlistWithUsers
 };

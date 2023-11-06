@@ -32,12 +32,13 @@ async function registerUser(req, res) {
 //view all the users
 async function viewUsers(req, res) {
   try {
-    const users = await User.find({});
+    const users = await User.find({ isAdmin: false });
     res.status(200).json(users);
   } catch (error) {
     console.log(error);
   }
 }
+
 
 //view certain user
 async function viewCertainUsers(req, res) {
