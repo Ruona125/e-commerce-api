@@ -1,9 +1,49 @@
 const { Product } = require("../../models/productModels");
 const mongoose = require("mongoose");
+const multer = require("multer");
+const crypto = require("crypto");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { getObjectSignedUrl } = require("../../utils/s3-setup");
+require("dotenv").config();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+const randomImageName = (bytes = 32) =>
+  crypto.randomBytes(bytes).toString("hex");
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  },
+  region: process.env.BUCKET_REGION,
+});
 
 async function createProduct(req, res) {
+  const buffer = req.file.buffer;
+
+  const params = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: randomImageName(),
+    Body: buffer,
+    ContentType: req.file.mimetype,
+  };
+  const command = new PutObjectCommand(params);
+  await s3.send(command);
+
+  const { name, price, description, category, reviews, ratings } = req.body;
   try {
-    const product = await Product.create(req.body);
+    // const product = await Product.create(req.body);
+    const product = await Product.create({
+      name,
+      price,
+      category,
+      reviews,
+      ratings,
+      description,
+      image: params.Key
+    });
     res.status(200).json(product);
   } catch (error) {
     console.log(error);
@@ -13,7 +53,7 @@ async function createProduct(req, res) {
 
 function test(req, res) {
   res.status(200).json("test");
-  console.log(test); 
+  console.log(test);
 }
 
 async function getCertainProduct(req, res) {
@@ -35,7 +75,7 @@ async function getAllProducts(req, res) {
     console.log(error);
   }
 }
- 
+
 async function deleteCertainProduct(req, res) {
   try {
     const { id } = req.params;
