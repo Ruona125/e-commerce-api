@@ -28,7 +28,7 @@ async function getObjectSignedUrl(imagePath) {
   };
 
   const command = new GetObjectCommand(params);
-  const url = await getSignedUrl(s3, command, { expiresIn: 86400 });
+  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
 
   // console.log("Generated signed URL for image:", imagePath, ":", url);
   return url;
