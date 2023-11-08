@@ -18,6 +18,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    imageLink: { // Add imageLink property to the schema
+      type: String,
+      required: false,
+    },
     category: {
       type: String,
       required: true

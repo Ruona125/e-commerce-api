@@ -19,18 +19,21 @@ const s3 = new S3Client({
   region: bucketRegion,
 });
 
-async function getObjectSignedUrl(key) {
+async function getObjectSignedUrl(imagePath) {
+  // console.log("Generating signed URL for image:", imagePath);
+
   const params = {
     Bucket: bucketName,
-    Key: key,
-    ContentType: 'image/jpeg'
+    Key: imagePath,
   };
+
   const command = new GetObjectCommand(params);
-  // const seconds = 60;
   const url = await getSignedUrl(s3, command, { expiresIn: 86400 });
-  // console.log("Generated URL for key", key, ":", url);
+
+  // console.log("Generated signed URL for image:", imagePath, ":", url);
   return url;
 }
+
 
 module.exports = {
   getObjectSignedUrl,

@@ -66,29 +66,37 @@ async function getCertainProduct(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+ 
 
-async function getAllProducts(req, res) { 
+async function getAllProducts(req, res) {
   try {
-    const products = await Product.find({});
+    const products = await Product.find();
 
     for (let product of products) {
-      console.log("Product Image:", product.image); // Log the image for debugging
-      const imageLink = await getObjectSignedUrl(product.image);
-      console.log("Image Link:", imageLink); // Log the image link for debugging
-      product.imageLink = imageLink;
-    } 
+      try {
+        // console.log("Product Image:", product.image); // Log the image for debugging
+        const imageLink = await getObjectSignedUrl(product.image);
+        // console.log("Image Link:", imageLink); // Log the image link for debugging
+        product.imageLink = imageLink;
+        await product.save(); // Save the updated product with the imageLink
+      } catch (error) {
+        console.error("Error fetching imageLink:", error);
+      }
+    }
 
     // Set the Content-Type header to indicate JSON data
     res.setHeader('Content-Type', 'application/json');
 
-    // Send the JSON response with a 200 status code
-    res.status(200).send(JSON.stringify(products));
+    // Send the JSON response
+    res.json(products);
   } catch (error) {
     // Handle any errors that may occur during the process
     console.error(error);
-    res.status(500).send({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+
 
 
 
