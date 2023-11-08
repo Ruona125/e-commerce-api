@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const crypto = require("crypto");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-const { getObjectSignedUrl } = require("../../utils/s3-setup");
+const {getObjectSignedUrl} = require("../../utils/s3-setup")
 require("dotenv").config();
 
 const storage = multer.memoryStorage();
@@ -42,7 +42,7 @@ async function createProduct(req, res) {
       reviews,
       ratings,
       description,
-      image: params.Key
+      image: params.Key,
     });
     res.status(200).json(product);
   } catch (error) {
@@ -67,14 +67,33 @@ async function getCertainProduct(req, res) {
   }
 }
 
-async function getAllProducts(req, res) {
+async function getAllProducts(req, res) { 
   try {
     const products = await Product.find({});
-    res.status(200).json(products);
+
+    for (let product of products) {
+      console.log("Product Image:", product.image); // Log the image for debugging
+      const imageLink = await getObjectSignedUrl(product.image);
+      console.log("Image Link:", imageLink); // Log the image link for debugging
+      product.imageLink = imageLink;
+    } 
+
+    // Set the Content-Type header to indicate JSON data
+    res.setHeader('Content-Type', 'application/json');
+
+    // Send the JSON response with a 200 status code
+    res.status(200).send(JSON.stringify(products));
   } catch (error) {
-    console.log(error);
+    // Handle any errors that may occur during the process
+    console.error(error);
+    res.status(500).send({ error: 'Internal Server Error' });
   }
 }
+
+
+
+
+
 
 async function deleteCertainProduct(req, res) {
   try {
@@ -112,5 +131,5 @@ module.exports = {
   test,
   deleteCertainProduct,
   updateProduct,
-  upload
+  upload,
 };

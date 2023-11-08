@@ -13,7 +13,7 @@ productRouter.get("/product", getAllProducts)
 productRouter.get("/product/:id", getCertainProduct)
 productRouter.delete("/product/:id", isAdmin, deleteCertainProduct)
 productRouter.put("/product/:id", isAdmin, updateProduct)
-
+    
 module.exports = {
     productRouter
 }

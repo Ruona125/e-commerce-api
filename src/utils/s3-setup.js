@@ -23,10 +23,12 @@ async function getObjectSignedUrl(key) {
   const params = {
     Bucket: bucketName,
     Key: key,
+    ContentType: 'image/jpeg'
   };
   const command = new GetObjectCommand(params);
   // const seconds = 60;
-  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+  const url = await getSignedUrl(s3, command, { expiresIn: 86400 });
+  // console.log("Generated URL for key", key, ":", url);
   return url;
 }
 
