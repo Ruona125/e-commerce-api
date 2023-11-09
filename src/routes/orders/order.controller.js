@@ -140,7 +140,7 @@ async function viewCertainUserOrder(req, res) {
             productId: product.productId,
             quantity: product.quantity,
             productDetails: productDetails,
-            subTotal: subTotal,
+            // subTotal: subTotal,
           };
         }),
         mainTotal: mainTotal, // Include mainTotal in the response
