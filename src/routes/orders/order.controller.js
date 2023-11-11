@@ -125,7 +125,7 @@ async function viewCertainUserOrder(req, res) {
       const products = await Product.find({ _id: { $in: productIds } });
 
       // Initialize mainTotal to 0 for this order
-      let mainTotal = 0;
+      let mainTotal = 0;  
 
       // Combine order and product details
       const orderWithProductDetails = {
