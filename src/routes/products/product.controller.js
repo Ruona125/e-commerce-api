@@ -130,7 +130,7 @@ async function deleteCertainProduct(req, res) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
-}
+} 
 
 async function updateProduct(req, res) {
   try {
