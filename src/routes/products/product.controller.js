@@ -1,9 +1,8 @@
 const { Product } = require("../../models/productModels");
-const mongoose = require("mongoose");
 const multer = require("multer");
 const crypto = require("crypto");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-const {getObjectSignedUrl} = require("../../utils/s3-setup")
+const { getObjectSignedUrl } = require("../../utils/s3-setup");
 require("dotenv").config();
 
 const storage = multer.memoryStorage();
@@ -21,34 +20,41 @@ const s3 = new S3Client({
 });
 
 async function createProduct(req, res) {
-  const buffer = req.file.buffer;
-
-  const params = {
-    Bucket: process.env.BUCKET_NAME,
-    Key: randomImageName(),
-    Body: buffer,
-    ContentType: req.file.mimetype,
-  };
-  const command = new PutObjectCommand(params);
-  await s3.send(command);
-
-  const { name, price, description, category, reviews, ratings } = req.body;
   try {
-    // const product = await Product.create(req.body);
+    const files = req.files;
+
+    const imageKeys = await Promise.all(
+      files.map(async (file) => {
+        const buffer = file.buffer;
+        const params = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: randomImageName(),
+          Body: buffer,
+          ContentType: file.mimetype,
+        };
+        const command = new PutObjectCommand(params);
+        await s3.send(command);
+        return params.Key;
+      })
+    );
+
+    const { name, price, description, category, reviews, ratings } = req.body;
+
     const product = await Product.create({
       name,
       price,
-      category,
+      category, 
       reviews,
       ratings,
       description,
-      image: params.Key,
+      images: imageKeys,
     });
+
     res.status(200).json(product);
   } catch (error) {
-    console.log(error);
-    res.status(500).json("error creating users");
-  }
+    console.error(error);
+    res.status(500).json("Error creating product");
+  }  
 }
 
 function test(req, res) {
@@ -66,38 +72,47 @@ async function getCertainProduct(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
- 
 
 async function getAllProducts(req, res) {
   try {
     const products = await Product.find();
 
-    for (let product of products) {
+    // Create an array of promises for fetching image links and updating products
+    const updatePromises = products.map(async (product) => {
       try {
-        // console.log("Product Image:", product.image); // Log the image for debugging
-        const imageLink = await getObjectSignedUrl(product.image);
-        // console.log("Image Link:", imageLink); // Log the image link for debugging
-        product.imageLink = imageLink;
-        await product.save(); // Save the updated product with the imageLink
+        if (product.images && product.images.length > 0) {
+          // Assuming getObjectSignedUrl is a function that works correctly
+          const imageLinks = await Promise.all(
+            product.images.map(async (image) => await getObjectSignedUrl(image))
+          );
+          product.imageLinks = imageLinks;
+        } else {
+          console.warn("Product has no images:", product._id);
+        }
+
+        // Save the updated product and return the result
+        return product.save();
       } catch (error) {
-        console.error("Error fetching imageLink:", error);
+        console.error("Error fetching imageLinks:", error);
+        // Return the original product if an error occurs
+        return product;
       }
-    }
+    });
+
+    // Wait for all promises to resolve
+    const updatedProducts = await Promise.all(updatePromises);
 
     // Set the Content-Type header to indicate JSON data
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader("Content-Type", "application/json");
 
-    // Send the JSON response
-    res.json(products);
+    // Send the JSON response with the updated products
+    res.json(updatedProducts);
   } catch (error) {
     // Handle any errors that may occur during the process
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
-
-
-
 
 
 

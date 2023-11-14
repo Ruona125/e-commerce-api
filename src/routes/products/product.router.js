@@ -5,7 +5,14 @@ const {createProductSchema} = require("../../validations/productValidation")
 const {validation} = require("../../utils/validationMiddleware")
 const productRouter = express.Router()
 
-productRouter.post("/product", validation(createProductSchema), authorize, isAdmin, upload.single("image"), createProduct)
+productRouter.post(
+    "/product",
+    validation(createProductSchema),
+    authorize,
+    isAdmin,
+    upload.array("images", 5), // "images" is the field name for the images, and 5 is the maximum number of files
+    createProduct
+  );
 productRouter.get("/", test)
 // productRouter.get("/product",authorize, isAdmin, getAllProducts)
 // productRouter.get("/product/:id", authorize, verifyCertainToken, getCertainProduct)
@@ -14,6 +21,6 @@ productRouter.get("/product/:id", getCertainProduct)
 productRouter.delete("/product/:id", isAdmin, deleteCertainProduct)
 productRouter.put("/product/:id", isAdmin, updateProduct)
     
-module.exports = {
+module.exports = { 
     productRouter
 }

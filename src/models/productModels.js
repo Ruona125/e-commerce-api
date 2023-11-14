@@ -14,16 +14,16 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    image: {
+    images: [{
       type: String,
       required: false,
-    },
-    imageLink: { // Add imageLink property to the schema
+    }],
+    imageLinks: [{  // Add a new property for image links
       type: String,
       required: false,
-    },
+    }],
     category: {
-      type: String,
+      type: String, 
       required: true
     }, 
     reviews: [{
