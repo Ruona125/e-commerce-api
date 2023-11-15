@@ -10,6 +10,17 @@ async function createReview(req, res) {
   }
 }
 
+async function viewReviews(req, res) {
+  try {
+    const reviews = await Reviews.find({});
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("error");
+  }
+}
+
 module.exports = {
   createReview,
+  viewReviews,
 };
