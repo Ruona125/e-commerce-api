@@ -7,6 +7,7 @@ const {orderRouter} = require("./routes/orders/order.router")
 const {cartRouter} = require("./routes/cart/cart.router")
 const { wishlistRouter } = require("./routes/wishlists/wishlist.router")
 const {reviewRouter} = require("./routes/reviews/reviews.router")
+const {ratingRouter} = require("./routes/ratings/ratings.router")
 const {stripePaymentRouter} = require("./routes/stripe/stripe.router")
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cartRouter)
 app.use(wishlistRouter)
 app.use(stripePaymentRouter)
 app.use(reviewRouter)
+app.use(ratingRouter)
 
 module.exports ={
     app,

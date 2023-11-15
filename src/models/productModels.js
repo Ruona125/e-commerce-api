@@ -26,14 +26,6 @@ const productSchema = new mongoose.Schema(
       type: String, 
       required: true
     }, 
-    reviews: [{
-      type: String,
-      required: false,
-    }],
-    ratings: {
-      type: Number,
-      required: false,
-    },
     inStock: {
       type: Boolean,
       default: true
