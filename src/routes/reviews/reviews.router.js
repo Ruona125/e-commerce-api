@@ -12,7 +12,7 @@ const {
 const reviewRouter = express.Router();
 
 reviewRouter.post("/review", authorize, verifyPostCertainToken, createReview)
-reviewRouter.get("/review", authorize, viewReviews)
+reviewRouter.get("/review/:productId", authorize, viewReviews)
 
 module.exports = {
     reviewRouter

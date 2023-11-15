@@ -12,7 +12,8 @@ async function createReview(req, res) {
 
 async function viewReviews(req, res) {
   try {
-    const reviews = await Reviews.find({});
+    const { productId } = req.params;
+    const reviews = await Reviews.find({productId});
     res.status(200).json(reviews);
   } catch (error) {
     console.log(error);

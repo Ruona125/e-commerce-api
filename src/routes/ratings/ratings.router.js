@@ -12,7 +12,7 @@ const {
 const ratingRouter = express.Router();
 
 ratingRouter.post("/rating", authorize, verifyPostCertainToken, createRating)
-ratingRouter.get("/rating", authorize, viewRatings);
+ratingRouter.get("/rating/:productId", authorize, viewRatings);
 
 module.exports = {
     ratingRouter
