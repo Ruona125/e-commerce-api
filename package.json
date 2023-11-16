@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "pm2 start server.js",
+    "stop": "pm2 stop server.js",
+    "restart": "pm2 restart server.js"
   },
   "keywords": [],
   "author": "",
