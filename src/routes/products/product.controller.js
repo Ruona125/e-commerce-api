@@ -58,7 +58,7 @@ async function createProduct(req, res) {
 }
 
 function test(req, res) {
-  res.status(200).json("test");
+  res.status(200).json("test..");
   console.log(test);
 }
 
