@@ -75,7 +75,48 @@ async function getCertainProduct(req, res) {
 
 async function getAllProducts(req, res) {
   try {
-    const products = await Product.find();
+    const products = await Product.find({inStock: true});
+
+    // Create an array of promises for fetching image links and updating products
+    const updatePromises = products.map(async (product) => {
+      try {
+        if (product.images && product.images.length > 0) {
+          // Assuming getObjectSignedUrl is a function that works correctly
+          const imageLinks = await Promise.all(
+            product.images.map(async (image) => await getObjectSignedUrl(image))
+          );
+          product.imageLinks = imageLinks;
+        } else {
+          console.warn("Product has no images:", product._id);
+        }
+
+        // Save the updated product and return the result
+        return product.save();
+      } catch (error) {
+        console.error("Error fetching imageLinks:", error);
+        // Return the original product if an error occurs
+        return product;
+      }
+    });
+
+    // Wait for all promises to resolve
+    const updatedProducts = await Promise.all(updatePromises);
+
+    // Set the Content-Type header to indicate JSON data
+    res.setHeader("Content-Type", "application/json");
+
+    // Send the JSON response with the updated products
+    res.json(updatedProducts);
+  } catch (error) {
+    // Handle any errors that may occur during the process
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+async function getAllProductsAdmin(req, res) {
+  try {
+    const products = await Product.find({});
 
     // Create an array of promises for fetching image links and updating products
     const updatePromises = products.map(async (product) => {
@@ -172,5 +213,6 @@ module.exports = {
   updateProduct,
   findAllGiftBoxes,
   findAllAccessories,
+  getAllProductsAdmin,
   upload,
 };
