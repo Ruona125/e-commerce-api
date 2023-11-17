@@ -124,6 +124,16 @@ async function findAllGiftBoxes(req, res) {
   }
 }
 
+async function findAllAccessories(req, res){
+  try {
+    const allProducts = await Product.find({ category: "Hair Accessories" });
+    res.status(200).json(allProducts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });  
+  } 
+}
+
 async function deleteCertainProduct(req, res) {
   try {
     const { id } = req.params;
@@ -161,5 +171,6 @@ module.exports = {
   deleteCertainProduct,
   updateProduct,
   findAllGiftBoxes,
+  findAllAccessories,
   upload,
 };
