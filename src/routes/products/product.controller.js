@@ -43,7 +43,7 @@ async function createProduct(req, res) {
     const product = await Product.create({
       name,
       price,
-      category, 
+      category,
       reviews,
       ratings,
       description,
@@ -54,7 +54,7 @@ async function createProduct(req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).json("Error creating product");
-  }  
+  }
 }
 
 function test(req, res) {
@@ -114,9 +114,15 @@ async function getAllProducts(req, res) {
   }
 }
 
-
-
-
+async function findAllGiftBoxes(req, res) {
+  try {
+    const allProducts = await Product.find({ category: "Gift Boxes" });
+    res.status(200).json(allProducts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
 
 async function deleteCertainProduct(req, res) {
   try {
@@ -130,7 +136,7 @@ async function deleteCertainProduct(req, res) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
-} 
+}
 
 async function updateProduct(req, res) {
   try {
@@ -154,5 +160,6 @@ module.exports = {
   test,
   deleteCertainProduct,
   updateProduct,
+  findAllGiftBoxes,
   upload,
 };
