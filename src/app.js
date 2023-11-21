@@ -11,15 +11,15 @@ const {ratingRouter} = require("./routes/ratings/ratings.router")
 const {stripePaymentRouter} = require("./routes/stripe/stripe.router")
 const app = express();
 
-const corsOptions = {
-    origin: 'https://www.admin.bucollections.com',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // enable set cookie
-  };
+// const corsOptions = {
+//     origin: 'https://www.admin.bucollections.com',
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true, // enable set cookie
+//   };
 
 app.use(express.json())
 app.use(helmet())
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(productRouter)
 app.use(userRouter)
