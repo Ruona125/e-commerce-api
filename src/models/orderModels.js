@@ -18,6 +18,7 @@ const OrderSchema = new mongoose.Schema(
       }, 
     ],
     status: { type: String, default: "pending" },
+    delivery: { type: Date },
     totalAmount: {type: Number}
   },
   { timestamps: true }

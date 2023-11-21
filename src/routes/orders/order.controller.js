@@ -1,3 +1,4 @@
+const moment = require("moment");
 const { User } = require("../../models/userModels");
 const { Order } = require("../../models/orderModels");
 const { Product } = require("../../models/productModels");
@@ -24,13 +25,30 @@ const { Cart } = require("../../models/cartModels");
 //this is to create order
 async function createOrder(req, res) {
   try {
+    // Create a new order with the request body
     const order = await Order.create(req.body);
+
+    // Add 7 days to the current time and set it as the delivery date
+    const deliveryDate = moment().add(7, 'days');
+
+    // Format the delivery date as per your requirements (adjust the format string)
+    const formattedDeliveryDate = deliveryDate.format('YYYY-MM-DD HH:mm:ss');
+
+    // Set the formatted delivery date in the order's delivery field
+    order.delivery = formattedDeliveryDate;
+
+    // Save the order with the formatted delivery date
+    await order.save();
+
+    // Delete items from the user's cart after creating the order
     const userId = order.userId;
-    await Cart.deleteMany({userId: userId})
+    await Cart.deleteMany({ userId: userId });
+
+    // Respond with the created order
     res.status(200).json(order);
   } catch (error) {
-    console.log(error);
-    res.status(500).json("error creating orders");
+    console.error(error);
+    res.status(500).json({ error: "Error creating orders" });
   }
 }
 
@@ -125,11 +143,13 @@ async function viewCertainUserOrder(req, res) {
       const products = await Product.find({ _id: { $in: productIds } });
 
       // Initialize mainTotal to 0 for this order
-      let mainTotal = 0;  
+      let mainTotal = 0;
 
       // Combine order and product details
       const orderWithProductDetails = {
         userId: order.userId,
+        status: order.status, // Include status in the response
+        delivery: order.delivery,
         products: order.products.map((product) => {
           const productDetails = products.find((p) =>
             p._id.equals(product.productId)
@@ -140,6 +160,7 @@ async function viewCertainUserOrder(req, res) {
             productId: product.productId,
             quantity: product.quantity,
             productDetails: productDetails,
+            // time: productDetails.createdAt
             // subTotal: subTotal,
           };
         }),
@@ -315,10 +336,6 @@ async function getOrdersWithUsers(req, res) {
     throw error;
   }
 }
-
-
-
-
 
 // async function getOrdersWithUsers(req, res) {
 //   try {
