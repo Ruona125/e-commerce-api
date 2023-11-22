@@ -6,7 +6,11 @@ const { getObjectSignedUrl } = require("../../utils/s3-setup");
 require("dotenv").config();
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 100 }, // 100 MB limit
+});
+
 
 const randomImageName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
