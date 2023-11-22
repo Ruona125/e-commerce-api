@@ -13,10 +13,10 @@ const randomImageName = (bytes = 32) =>
 
 const s3 = new S3Client({
   credentials: {
-    accessKeyId: process.env.ACCESS_KEY,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    accessKeyId: 'AKIA6BJD5HLYHMH4RSFR',
+    secretAccessKey: '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',
   },
-  region: process.env.BUCKET_REGION,
+  region: 'us-east-1',
 });
 
 async function createProduct(req, res) {
@@ -27,7 +27,7 @@ async function createProduct(req, res) {
       files.map(async (file) => {
         const buffer = file.buffer;
         const params = {
-          Bucket: process.env.BUCKET_NAME,
+          Bucket: 'bucollections-image',
           Key: randomImageName(),
           Body: buffer,
           ContentType: file.mimetype,
