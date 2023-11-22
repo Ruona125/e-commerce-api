@@ -6,7 +6,7 @@ const PORT = 8000;
 const server = http.createServer(app)
 mongoose
   .connect(
-    "mongodb+srv://bucollections:grEivUMladnVWeI4@bucollections.fsatjk8.mongodb.net/bucollections?retryWrites=true&w=majority"
+    "mongodb://mongo:DbA-ecg-baFFGd536hAEAHhDa56DAhFg@viaduct.proxy.rlwy.net:19002"
   )
   .then(() => {
     console.log("Connected to database!");
