@@ -4,25 +4,6 @@ const { Order } = require("../../models/orderModels");
 const { Product } = require("../../models/productModels");
 const { Cart } = require("../../models/cartModels");
 
-//this is to create order and clear the carts
-// async function createOrder(req, res) {
-//   try {
-//     const order = await Order.create(req.body);
-
-//     // Get the userId from the created order
-//     const userId = order.userId;
-
-//     // Remove all carts associated with the user's userId
-//     await Cart.deleteMany({ userId: userId });
-
-//     res.status(200).json(order);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json("Error creating orders");
-//   }
-// }
-
-//this is to create order
 async function createOrder(req, res) {
   try {
     // Create a new order with the request body
@@ -52,29 +33,6 @@ async function createOrder(req, res) {
   }
 }
 
-//this is the controller to create order with totalAmount
-// async function createOrder(req, res) {
-//   try {
-//     const orderData = req.body;
-//     // Calculate the total amount by iterating over the products array
-//     const totalAmount = orderData.products.reduce((total, product) => {
-//       // Calculate the product's total price by multiplying quantity and price
-//       const productTotal = product.quantity * product.price;
-//       return total + productTotal;
-//     }, 0); // Start with an initial total of 0
-
-//     // Set the calculated totalAmount in the orderData
-//     orderData.totalAmount = totalAmount;
-
-//     // Create the order with the updated orderData
-//     const order = await Order.create(orderData);
-
-//     res.status(200).json(order);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json("error creating orders");
-//   }
-// }
 
 async function viewOrders(req, res) {
   try {
@@ -84,48 +42,6 @@ async function viewOrders(req, res) {
     console.log(error);
   }
 }
-
-//this is for admin to view the order and the product details.
-//it won't show the user details
-// async function viewOrders(req, res) {
-//   try {
-//     // Aggregate the data from the two collections
-//     const orders = await Order.aggregate([
-//       {
-//         $match: {},
-//       },
-//       {
-//         $lookup: {
-//           from: "products",
-//           localField: "products.productId",
-//           foreignField: "_id",
-//           as: "productDetails",
-//         },
-//       },
-//       {
-//         $unwind: "$productDetails",
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           userId: 1,
-//           products: 1,
-//           amount: 1,
-//           address: 1,
-//           status: 1,
-//           productDetails: 1,
-//         },
-//       },
-//     ]);
-
-//     // Return the orders
-//     res.status(200).json(orders);
-//   } catch (error) {
-//     res.status(500).json("error getting user");
-//   }
-// }
-
-//this is for the user to view their order with the product details
 
 async function viewCertainUserOrder(req, res) {
   try {
