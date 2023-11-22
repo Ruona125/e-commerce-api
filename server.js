@@ -6,7 +6,7 @@ const PORT = 8000;
 const server = http.createServer(app)
 mongoose
   .connect(
-    "mongodb+srv://bucollections:grEivUMladnVWeI4@bucollections.fsatjk8.mongodb.net/bucollections?retryWrites=true&w=majority"
+    "mongodb://mongo:DbA-ecg-baFFGd536hAEAHhDa56DAhFg@viaduct.proxy.rlwy.net:19002"
   )
   .then(() => {
     console.log("Connected to database!");
@@ -23,7 +23,7 @@ mongoose
   // mongodb+srv://bucollections:grEivUMladnVWeI4@bucollections.fsatjk8.mongodb.net/bucollections?retryWrites=true&w=majority
 
   //production database
- // mongodb://mongo:f-1gah4A6A-3a4H3C14fBB4Dh63CbEc4@roundhouse.proxy.rlwy.net:59804
+ // mongodb://mongo:DbA-ecg-baFFGd536hAEAHhDa56DAhFg@viaduct.proxy.rlwy.net:19002
 
  //this is the tidio link
  // <script src="//code.tidio.co/qdkyn3fnzydx4pphizx3eo53kebvz4zi.js" async></script>
