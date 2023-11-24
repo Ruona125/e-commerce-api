@@ -60,7 +60,7 @@ async function createProduct(req, res) {
     res.status(500).json("Error creating product");
   }
 }
-
+ 
 function test(req, res) {
   res.status(200).json("test..");
   console.log(test);
