@@ -16,21 +16,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // address: {
-  //   street: String,
-  //   city: String,
-  //   state: String,
-  //   postalCode: String,
-  //   country: String,
-  // },
   phoneNumber: {
     type: Number, 
     required: true
   },
   isAdmin: {
     type: Boolean,
-    default: false,
-  },
+    default: true,
+  }, 
   createdAt: {
     type: Date,
     default: Date.now,

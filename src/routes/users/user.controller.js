@@ -134,10 +134,47 @@ async function refresh(req, res) {
   }
 }
 
+async function updatePassword(req, res) {
+  try {
+    const { userId, oldPassword, newPassword } = req.body;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    // Check if the provided old password matches the stored password
+    const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isOldPasswordValid) {
+      return res.status(401).json({ message: "Invalid old password" });
+    }
+
+    // Hash the new password before saving it
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    user.password = hashedNewPassword;
+
+    // Save the changes to the database
+    await user.save();
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+  
+
 
 
 
 module.exports = {
+  updatePassword,
   registerUser,
   viewUsers,
   viewCertainUsers,
