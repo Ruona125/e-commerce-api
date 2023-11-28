@@ -172,6 +172,17 @@ async function updatePassword(req, res) {
   }
 }
 
+async function forgotPassword(req, res){
+  const {email, to, html} = req.body;
+  if(!email){
+    return res.status(400).json({ message: "Email is required" });
+  }
+  try{
+    const user = await User.findById(userId)
+  }catch(error){
+    console.log(error)
+  }
+}
   
 
 
