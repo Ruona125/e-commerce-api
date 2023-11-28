@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt")
 const { User } = require("../../models/userModels");
+const sgMail = require("@sendgrid/mail");
+
+const apiKey = "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"
+sgMail.setApiKey(apiKey)
 
 //user registration
 async function registerUser(req, res) {
