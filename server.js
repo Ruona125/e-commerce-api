@@ -27,3 +27,6 @@ mongoose
 
  //this is the tidio link
  // <script src="//code.tidio.co/qdkyn3fnzydx4pphizx3eo53kebvz4zi.js" async></script>
+
+ //this is the sendgrid api key
+ // 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
