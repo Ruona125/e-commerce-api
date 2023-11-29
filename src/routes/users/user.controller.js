@@ -201,7 +201,7 @@ async function forgotPassword(req, res) {
     }
     const resetToken = jwt.sign({ userId: user._id }, "your-secret-key");
     await User.findByIdAndUpdate(user._id, { reset_token: resetToken });
-    const resetLink = `https://www.bucollections.com/reset/password/${resetToken}`;
+    const resetLink = `http://localhost:5173/resetpassword/${resetToken}`;
     const msg = {
       to: email,
       from: "meetruona@gmail.com",
