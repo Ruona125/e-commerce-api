@@ -224,6 +224,39 @@ async function forgotPassword(req, res) {
   }
 }
 
+async function resetPassword(req, res) {
+  const { password, confirm_password } = req.body;
+  const { reset_token } = req.params;
+
+  if (!password || !reset_token) {
+    return res.status(400).json({ message: "Token and password are required" });
+  }
+
+  try {
+    const user = await User.findOne({ reset_token });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    if (password !== confirm_password) {
+      return res.status(400).json({ error: "Passwords don't match" });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(user._id, {
+      password: passwordHash,
+      reset_token: null,
+    });
+
+    res.json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   updatePassword,
   registerUser,
@@ -232,5 +265,6 @@ module.exports = {
   deleteCertainUser,
   login,
   refresh,
-  forgotPassword
+  forgotPassword, 
+  resetPassword
 };
