@@ -199,7 +199,7 @@ async function forgotPassword(req, res) {
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
-    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+    const resetToken = jwt.sign({ userId: user._id }, "your-secret-key");
     await User.findByIdAndUpdate(user._id, { reset_token: resetToken });
     const resetLink = `https://www.bucollections.com/reset/password/${resetToken}`;
     const msg = {

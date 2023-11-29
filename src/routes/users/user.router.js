@@ -1,5 +1,5 @@
 const express = require("express")
-const {registerUser, viewUsers, login, viewCertainUsers, deleteCertainUser, refresh, updatePassword} = require("./user.controller")
+const {registerUser, viewUsers, login, viewCertainUsers, deleteCertainUser, refresh, updatePassword, forgotPassword} = require("./user.controller")
 const {isAdmin, authorize, verifyPostCertainToken} = require("../../utils/requireAuth")
 const {validation} = require("../../utils/validationMiddleware")
 const {createUserSchema} = require("../../validations/userValidation")
@@ -12,6 +12,7 @@ userRouter.get("/users", isAdmin, viewUsers);
 userRouter.get("/users/:id",isAdmin, viewCertainUsers)
 userRouter.delete("/users/:id", isAdmin, deleteCertainUser)
 userRouter.post("/login", login);
+userRouter.post("/forgotpassword", forgotPassword)
 
 module.exports = {
     userRouter
