@@ -233,7 +233,7 @@ async function resetPassword(req, res) {
   }
 
   try {
-    const user = await User.findOne({ reset_token });
+    const user = await User.findOne({ reset_token: reset_token });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid token" });
