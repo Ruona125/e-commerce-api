@@ -195,26 +195,28 @@ async function forgotPassword(req, res) {
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "user not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const { default: cryptoRandomString } = await import(
-      "crypto-random-string"
-    );
+    let resetToken;
+    do {
+      resetToken = cryptoRandomString({ length: 20, type: "url-safe" });
+    } while (resetToken.includes('.'));
 
-    // const resetToken = jwt.sign({ userId: user._id }, "your-secret-key");
-    const resetToken = cryptoRandomString({ length: 20, type: "url-safe" });
     const resetTokenExpiration = Date.now() + 3600000; // Token expires in 1 hour
 
     user.reset_token = resetToken;
     user.reset_token_expiration = resetTokenExpiration;
+
     await User.findByIdAndUpdate(user._id, {
       reset_token: resetToken,
       reset_token_expiration: resetTokenExpiration,
     });
+
     const resetLink = `http://localhost:5173/resetpassword/${resetToken}`;
     const msg = {
       to: email,
@@ -235,6 +237,7 @@ async function forgotPassword(req, res) {
       });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
