@@ -202,6 +202,10 @@ async function forgotPassword(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const { default: cryptoRandomString } = await import(
+      "crypto-random-string"
+    );
+
     let resetToken;
     do {
       resetToken = cryptoRandomString({ length: 20, type: "url-safe" });
