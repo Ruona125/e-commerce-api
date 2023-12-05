@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
     type: String,  
     default: null,
   },
+  reset_token_expiration: {
+    type: Date
+  },
   createdAt: {
     type: Date,
     default: Date.now,

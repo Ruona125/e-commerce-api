@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { User } = require("../../models/userModels");
 const sgMail = require("@sendgrid/mail");
+// const cryptoRandomString = require('crypto-random-string');
 
 const apiKey =
   "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";
@@ -199,8 +200,21 @@ async function forgotPassword(req, res) {
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
-    const resetToken = jwt.sign({ userId: user._id }, "your-secret-key");
-    await User.findByIdAndUpdate(user._id, { reset_token: resetToken });
+
+    const { default: cryptoRandomString } = await import(
+      "crypto-random-string"
+    );
+
+    // const resetToken = jwt.sign({ userId: user._id }, "your-secret-key");
+    const resetToken = cryptoRandomString({ length: 20, type: "url-safe" });
+    const resetTokenExpiration = Date.now() + 3600000; // Token expires in 1 hour
+
+    user.reset_token = resetToken;
+    user.reset_token_expiration = resetTokenExpiration;
+    await User.findByIdAndUpdate(user._id, {
+      reset_token: resetToken,
+      reset_token_expiration: resetTokenExpiration,
+    });
     const resetLink = `http://localhost:5173/resetpassword/${resetToken}`;
     const msg = {
       to: email,
@@ -265,6 +279,6 @@ module.exports = {
   deleteCertainUser,
   login,
   refresh,
-  forgotPassword, 
-  resetPassword
+  forgotPassword,
+  resetPassword,
 };
