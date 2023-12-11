@@ -26,9 +26,9 @@ async function viewCertainWishlist(req, res) {
 
     const wishlists = await Wishlist.find({ userId });
 
-    if (wishlists.length === 0) {
-      return res.status(404).json({ message: "wishlist not found" });
-    }
+    // if (wishlists.length === 0) {
+    //   return res.status(404).json({ message: "wishlist not found" });
+    // }
     const wishlistDetails = [];
 
     for (const wishlist of wishlists) {

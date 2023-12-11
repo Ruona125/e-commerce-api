@@ -75,9 +75,9 @@ async function viewCertainUserCart(req, res) {
     // Find all carts that belong to the user based on userId
     const carts = await Cart.find({ userId });
 
-    if (carts.length === 0) {
-      return res.status(404).json({ message: "Carts not found" });
-    }
+    // if (carts.length === 0) {
+    //   return res.status(404).json({ message: "Carts not found" });
+    // }
 
     // Initialize an array to store cart details
     const cartDetails = [];
