@@ -6,6 +6,7 @@ const sgMail = require("@sendgrid/mail");
 
 const apiKey =
   "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";
+  // "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" //this is for toby
 sgMail.setApiKey(apiKey);
 
 //user registration
@@ -224,6 +225,7 @@ async function forgotPassword(req, res) {
     const resetLink = `http://localhost:5173/resetpassword/${resetToken}`;
     const msg = {
       to: email,
+      // from: "collectionsbu@gmail.com",
       from: "meetruona@gmail.com",
       subject: "Reset bucollections password",
       text: `Here is the link to reset your password: ${resetLink}`,

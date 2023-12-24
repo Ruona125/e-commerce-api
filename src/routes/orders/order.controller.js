@@ -48,9 +48,9 @@ async function viewCertainUserOrder(req, res) {
     const { userId } = req.params;
     const certainOrder = await Order.find({ userId });
 
-    if (certainOrder.length === 0) {
-      return res.status(404).json({ message: "Order not found" });
-    }
+    // if (certainOrder.length === 0) {
+    //   return res.status(404).json({ message: "Order not found" });
+    // }
 
     const orderDetails = [];
 
