@@ -4,11 +4,11 @@ const { User } = require("../../models/userModels");
 const sgMail = require("@sendgrid/mail");
 // const cryptoRandomString = require('crypto-random-string');
 
-const apiKey =
-  "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";
-  // "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" //this is for toby
+const apiKey = "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"
+  // "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"; //this is for me
+  // "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" //this is for toby
 sgMail.setApiKey(apiKey);
-
+ 
 //user registration
 async function registerUser(req, res) {
   try {
@@ -225,8 +225,8 @@ async function forgotPassword(req, res) {
     const resetLink = `http://localhost:5173/resetpassword/${resetToken}`;
     const msg = {
       to: email,
-      // from: "collectionsbu@gmail.com",
-      from: "meetruona@gmail.com",
+      from: "collectionsbu@gmail.com",
+      // from: "meetruona@gmail.com",
       subject: "Reset bucollections password",
       text: `Here is the link to reset your password: ${resetLink}`,
       html: `<strong>Here is the link to reset your password: ${resetLink}</strong>`,
