@@ -41,6 +41,38 @@ async function registerUser(req, res) {
   }
 }
 
+async function registerUserAdmin(req, res) {
+  try {
+    const { username, email, password, phoneNumber, isAdmin } = req.body;
+
+    // Check if the email is already registered
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+    // Hash the user's password before saving it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      phoneNumber,
+      isAdmin: true
+    });
+
+    // Save the user to the database
+    await user.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 //view all the users
 async function viewUsers(req, res) {
   try {
@@ -290,4 +322,5 @@ module.exports = {
   refresh,
   forgotPassword,
   resetPassword,
+  registerUserAdmin
 };
