@@ -1,0 +1,17 @@
+.prod-status{
+    margin-left: 70px;
+}
+.prod-status h4 {
+    padding: 5px;
+}
+.order-alignment{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    gap: -17em;
+    padding-top: 1rem;
+    padding-bottom: 4rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+}

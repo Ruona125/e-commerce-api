@@ -1,0 +1,48 @@
+.certain-img-style {
+    height: 490px;
+    width: 100%;
+}
+
+.main-prod-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    gap: -17em;
+    padding: 4rem;
+}
+
+.details-wrapper-product {
+    padding: 8px;
+    width: 650px;
+}
+
+.prod-details {
+    padding: 0 20px;
+    /* Add padding to the prod-details for better spacing */
+}
+
+.prod-det {
+    font-family: Edu TAS Beginner, cursive;
+}
+
+.prod-heading {
+    font-family: 'Agbalumo', cursive;
+    font-size: 33px;
+}
+
+@media screen and (max-width: 1054px) {
+    .certain-order-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 595px) {
+    /* .certain-prod-container {
+        padding-left: 73px
+    } */
+
+    .details-wrapper-product {
+        width: 100%;
+      }
+}

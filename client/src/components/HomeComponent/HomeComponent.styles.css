@@ -1,0 +1,18 @@
+.background-wrapper {
+    background-image: url("../../assets/curology-gqOVZDJUddw-unsplash.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 80vh;
+    opacity: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.text-wrapper {
+    text-align: center;
+  }
+
+  .text-wrapper h1{
+    color: #fff;
+  }

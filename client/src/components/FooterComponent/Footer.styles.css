@@ -1,0 +1,69 @@
+/* Add these styles to your Footer.styles.css */
+
+footer {
+    width: 100%;
+    background-color: black;
+    margin-top: auto; /* Push the footer to the bottom */
+  }
+  
+  .footer-wrapper {
+    /* display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 23px; */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    padding: 23px;
+  }
+
+
+  /* .footer-wrapper div {
+    text-align: center;
+  }
+   */
+  .footer-wrapper div h3 {
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    padding: 6px;
+  }
+  
+  .footer-wrapper div h2 {
+    color: rgb(214, 119, 178);
+    font-family: 'Roboto', sans-serif;
+    padding: 10px;
+  }
+  
+  .footer-link {
+    text-decoration: none;
+    color: #fff;
+  }
+  .footer-link:hover{
+    color: rgb(214, 119, 178);
+  }
+
+  @media screen and (max-width:932px) {
+    .footer-wrapper {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer-wrapper div {
+      padding: 10px;
+    }
+    .footer-wrapper div h3 {
+      font-size: 18px;
+    }
+  }
+
+  @media screen and (max-width: 563px) {
+    .footer-wrapper {
+      grid-template-columns: 1fr;
+      padding: 33px;
+      text-align: center;
+      margin: 0 auto; /* Center the .footer-wrapper */
+    }
+    .footer-wrapper div {
+      padding: 10px;
+    }
+  }
+  
+

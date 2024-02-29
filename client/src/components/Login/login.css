@@ -1,0 +1,24 @@
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 115vh;
+    background-image: linear-gradient(#e2b7e6, rgb(214, 119, 178));
+    margin-top: -48px; /* Add margin to compensate for the fixed AppBar */
+  }
+  
+  .login-header {
+    align-self: center;
+    margin-bottom: 20px;
+    color: #fff;
+    padding: 3px 20px;
+    border-radius: 25%;
+    background-color: rgb(214, 119, 178);
+  }
+  
+  .login-form {
+    width: 300px;
+    text-align: center;
+  }
+  

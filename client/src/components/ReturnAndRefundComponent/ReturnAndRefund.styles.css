@@ -1,0 +1,16 @@
+.refund-wrapper p{
+    padding: 25px;
+}
+
+.refund-wrapper {
+    padding: 25px;
+}
+
+/* .refund-container {
+    padding: 25px;
+} */
+
+.refund-wrapper li {
+    list-style: none;
+    padding: 10px;
+}

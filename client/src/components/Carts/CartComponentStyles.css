@@ -1,0 +1,30 @@
+.img-wrapper {
+    height: 490px;
+    width: 50%;
+}
+.del-icon{
+    cursor: pointer;
+    padding:23px;
+}
+.icon{
+    cursor: pointer;
+    /* padding: 3px; */
+}
+
+.prod-det-dis{
+    font-size: 23px;
+    padding: 10px;
+    font-family: 'Agbalumo', cursive;
+}
+
+.button-style {
+    color: #000;
+}
+
+.no-products-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* You can adjust this value to your preference */
+    margin-top: -10em; /* Move this margin to the no-products-message instead of the Box element */
+  }

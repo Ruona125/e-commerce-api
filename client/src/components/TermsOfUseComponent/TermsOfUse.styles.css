@@ -1,0 +1,18 @@
+.text-content{
+    padding-left: 45px;
+    padding-right: 175px;
+}
+
+.text-content li {
+    font-size: 20px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.text-content p {
+    font-size: 18px;
+}
+
+.introduction-header {
+    font-size: 20px;
+}

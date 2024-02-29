@@ -1,0 +1,46 @@
+.details-wrapper {
+    border: 1px solid rgb(214, 119, 178);
+    width: 200px;
+    box-sizing: border-box;
+    padding: 8px;
+    margin: -17px auto 0;
+}
+
+.product-container-with-products {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: -110em;
+    /* background-color: red; */
+}
+
+.product-item {
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+.func-button-details {
+    /* padding: 4px;
+    width: 150px;
+    color: #fff;
+    background-color: rgb(214, 119, 178);
+    display: inline-block;
+    margin: 0 auto;
+    border-radius: 5%; */
+    font-family: Edu TAS Beginner, cursive;
+}
+
+.func-button {
+    padding: 4px;
+    width: 150px;
+    color: #fff;
+    background-color: rgb(214, 119, 178);
+    display: inline-block;
+    margin: 0 auto;
+    border-radius: 5%;
+    font-family: Edu TAS Beginner, cursive;
+    cursor: pointer;
+}
+
+.progress-bar {
+    color: 'rgb(214, 119, 178)'
+}
